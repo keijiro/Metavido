@@ -115,7 +115,7 @@ sealed class Controller : MonoBehaviour
         _material = new Material(_shader);
 
         // Multiplexing buffer
-        _buffer = new RenderTexture(1920, 1080, 0);
+        _buffer = new RenderTexture(Screen.width, Screen.height, 0);
         _buffer.Create();
 
         _mainView.texture = _buffer;
@@ -147,6 +147,12 @@ sealed class Controller : MonoBehaviour
            (ShaderID.DepthRange, new Vector2(_minDepth, _maxDepth));
 
         Graphics.Blit(null, _buffer, _material);
+
+        /*
+        Debug.Log($"{_projection[0, 0]}, {_projection[0, 2]}, " +
+                  $"{_projection[1, 1]}, {_projection[1, 2]}, " +
+                  $"{_projection[2, 2]}, {_projection[2, 3]}");
+        */
     }
 
     #endregion

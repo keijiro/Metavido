@@ -11,8 +11,6 @@ Shader "Hidden/Bibcam/Multiplexer"
 
     CGINCLUDE
 
-#include "UnityCG.cginc"
-
 // Uniforms from AR Foundation
 sampler2D _textureY;
 sampler2D _textureCbCr;
@@ -42,23 +40,23 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
     return float3(r, g, b);
 }
 
-// Common vertex shader
-void Vertex(float4 vertex : POSITION,
+// Vertex shader
+void Vertex(float4 position : POSITION,
             float2 texCoord : TEXCOORD,
-            out float4 outVertex : SV_Position,
+            out float4 outPosition : SV_Position,
             out float2 outTexCoord : TEXCOORD)
 {
-    outVertex = UnityObjectToClipPos(vertex);
+    outPosition = UnityObjectToClipPos(position);
     outTexCoord = texCoord;
 }
 
 // Fragment shader
-float4 Fragment(float4 vertex : SV_Position,
+float4 Fragment(float4 position : SV_Position,
                 float2 texCoord : TEXCOORD) : SV_Target
 {
     float4 tc = frac(texCoord.xyxy * float4(1, 1, 2, 2));
 
-    // Aspect ration compensation & vertical flip
+    // Aspect ratio compensation & vertical flip
     tc.yw = (0.5 - tc.yw) * _AspectFix + 0.5;
 
     // Texture samples
@@ -79,7 +77,7 @@ float4 Fragment(float4 vertex : SV_Position,
 
     // Output
     float3 srgb = tc.x < 0.5 ? c1 : (tc.y < 0.5 ? c2 : c3);
-    return float4(GammaToLinearSpace(srgb), 1);
+    return float4(srgb, 1);
 }
 
     ENDCG
