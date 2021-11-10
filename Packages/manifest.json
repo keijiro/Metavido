@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.unity.render-pipelines.universal": "12.1.0",
+    "com.unity.ugui": "1.0.0",
     "com.unity.xr.arfoundation": "4.2.1",
     "com.unity.xr.arkit": "4.2.1"
   }

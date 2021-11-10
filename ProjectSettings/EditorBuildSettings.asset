@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Test.unity
+    path: Assets/Bibcam.unity
     guid: df05f20fbdd5e4bfe99c1b94f14e5f22
   m_configObjects:
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 90ffc73899cb64440a2dff31db3b5da2, type: 2}
