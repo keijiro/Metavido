@@ -4,7 +4,7 @@ using UnityEngine.XR.ARFoundation;
 
 namespace Bibcam {
 
-sealed class Controller : MonoBehaviour
+sealed class Encoder : MonoBehaviour
 {
     #region External scene object references
 
