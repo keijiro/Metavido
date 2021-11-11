@@ -2,6 +2,7 @@
   "dependencies": {
     "com.unity.ugui": "1.0.0",
     "com.unity.xr.arfoundation": "4.2.1",
-    "com.unity.xr.arkit": "4.2.1"
+    "com.unity.xr.arkit": "4.2.1",
+    "com.unity.modules.video": "1.0.0"
   }
 }

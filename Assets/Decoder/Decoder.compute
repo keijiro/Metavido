@@ -1,0 +1,25 @@
+#pragma kernel Decoder
+
+Texture2D<float4> Source;
+RWStructuredBuffer<float> Output;
+
+[numthreads(4, 4, 1)]
+void Decoder(uint2 id : SV_DispatchThreadID)
+{
+    const float margin = 0.02;
+
+    uint width, height;
+    Source.GetDimensions(width, height);
+
+    uint acc = 0;
+    uint x = width * margin * (id.x + 0.5) / 4;
+
+    for (uint i = 0; i < 32; i++)
+    {
+        uint y = height * (id.y * 32 + i + 0.5) / 128;
+        float4 c = Source[uint2(x, y)];
+        acc |= (dot(c.rgb, 1.0 / 3) > 0.5) << i;
+    }
+
+    Output[id.x * 4 + id.y] = asfloat(acc);
+}

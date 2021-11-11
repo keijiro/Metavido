@@ -30,7 +30,7 @@ sealed class Encoder : MonoBehaviour
 
     #endregion
 
-    #region Internal objects
+    #region Private objects
 
     Matrix4x4 _projection;
     Material _material;

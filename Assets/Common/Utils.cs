@@ -13,4 +13,13 @@ static class ShaderID
     public static readonly int Metadata = Shader.PropertyToID("_Metadata");
 }
 
+static class MathUtil
+{
+    public static Quaternion NormalizedRotation(in Vector3 v)
+    {
+        var w = Mathf.Sqrt(1 - Vector3.Dot(v, v));
+        return new Quaternion(v.x, v.y, v.z, w);
+    }
+}
+
 } // namespace Bibcam {

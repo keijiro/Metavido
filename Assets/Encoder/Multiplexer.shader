@@ -48,7 +48,7 @@ bool EncodeMetadata(float2 uv)
 {
     uint2 p = (uint2)(uv * float2(4, 128));
     uint bit = p.y & 31;
-    uint data = asuint(_Metadata[p.x][p.y / 32]);
+    uint data = asuint(_Metadata[p.y / 32][p.x]);
     return (data >> bit) & 1;
 }
 
