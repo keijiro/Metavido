@@ -17,9 +17,12 @@ sampler2D _textureCbCr;
 sampler2D _HumanStencil;
 sampler2D _EnvironmentDepth;
 
-// Rcam parameters
+// Additional camera parameters
 float2 _DepthRange;
 float _AspectFix;
+
+// Metadata as matrix
+float4x4 _Metadata;
 
 // Hue encoding
 float3 Hue2RGB(float hue)
@@ -40,6 +43,15 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
     return float3(r, g, b);
 }
 
+// Metadata encoding
+bool EncodeMetadata(float2 uv)
+{
+    uint2 p = (uint2)(uv * float2(4, 128));
+    uint bit = p.y & 31;
+    uint data = asuint(_Metadata[p.x][p.y / 32]);
+    return (data >> bit) & 1;
+}
+
 // Vertex shader
 void Vertex(float4 position : POSITION,
             float2 texCoord : TEXCOORD,
@@ -54,7 +66,11 @@ void Vertex(float4 position : POSITION,
 float4 Fragment(float4 position : SV_Position,
                 float2 texCoord : TEXCOORD) : SV_Target
 {
-    float4 tc = frac(texCoord.xyxy * float4(1, 1, 2, 2));
+    const float margin = 0.02;
+
+    // Texture coordinate remapping
+    float2 uv = (texCoord.xy - float2(margin, 0)) / float2(1 - margin, 1);
+    float4 tc = frac(uv.xyxy * float4(1, 1, 2, 2));
 
     // Aspect ratio compensation & vertical flip
     tc.yw = (0.5 - tc.yw) * _AspectFix + 0.5;
@@ -64,6 +80,9 @@ float4 Fragment(float4 position : SV_Position,
     float2 cbcr = tex2D(_textureCbCr, tc.zy).xy;
     float mask = tex2D(_HumanStencil, tc.zw).x;
     float depth = tex2D(_EnvironmentDepth, tc.zw).x;
+
+    // Metadata
+    float3 c0 = EncodeMetadata(texCoord.xy / float2(margin, 1));
 
     // Color plane
     float3 c1 = YCbCrToSRGB(y, cbcr);
@@ -76,7 +95,7 @@ float4 Fragment(float4 position : SV_Position,
     float3 c3 = mask;
 
     // Output
-    float3 srgb = tc.x < 0.5 ? c1 : (tc.y < 0.5 ? c2 : c3);
+    float3 srgb = uv.x < 0 ? c0 : (tc.x < 0.5 ? c1 : (tc.y < 0.5 ? c2 : c3));
     return float4(srgb, 1);
 }
 

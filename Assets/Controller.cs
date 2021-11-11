@@ -4,16 +4,6 @@ using UnityEngine.XR.ARFoundation;
 
 namespace Bibcam {
 
-static class ShaderID
-{
-    public static readonly int TextureY = Shader.PropertyToID("_textureY");
-    public static readonly int TextureCbCr = Shader.PropertyToID("_textureCbCr");
-    public static readonly int HumanStencil = Shader.PropertyToID("_HumanStencil");
-    public static readonly int EnvironmentDepth = Shader.PropertyToID("_EnvironmentDepth");
-    public static readonly int DepthRange = Shader.PropertyToID("_DepthRange");
-    public static readonly int AspectFix = Shader.PropertyToID("_AspectFix");
-}
-
 sealed class Controller : MonoBehaviour
 {
     #region External scene object references
@@ -48,21 +38,21 @@ sealed class Controller : MonoBehaviour
 
     #endregion
 
-    #region Public method (UI callback)
+    #region Public methods (UI callback)
 
     public void ResetOrigin()
       => _camera.transform.parent.position = -_camera.transform.localPosition;
 
     #endregion
 
-    #region Camera callbacks
+    #region AR foundation callbacks
 
     void OnCameraFrameReceived(ARCameraFrameEventArgs args)
     {
-        // We expect there is one texture at least.
+        // No operation for no texture
         if (args.textures.Count == 0) return;
 
-        // Try receiving Y/CbCr textures.
+        // Y/CbCr textures
         for (var i = 0; i < args.textures.Count; i++)
         {
             var id = args.propertyNameIds[i];
@@ -73,16 +63,15 @@ sealed class Controller : MonoBehaviour
                 _material.SetTexture(ShaderID.TextureCbCr, tex);
         }
 
-        // Try receiving the projection matrix.
+        // Projection matrix
         if (args.projectionMatrix.HasValue)
         {
             _projection = args.projectionMatrix.Value;
-
             // Aspect ratio compensation (camera vs. 16:9)
             _projection[1, 1] *= (16.0f / 9) / _camera.aspect;
         }
 
-        // Use the first texture to calculate the source texture aspect ratio.
+        // Source texture aspect ratio
         var tex1 = args.textures[0];
         var texAspect = (float)tex1.width / tex1.height;
 
@@ -93,7 +82,7 @@ sealed class Controller : MonoBehaviour
 
     void OnOcclusionFrameReceived(AROcclusionFrameEventArgs args)
     {
-        // Try receiving stencil/depth textures.
+        // Stencil/depth textures.
         for (var i = 0; i < args.textures.Count; i++)
         {
             var id = args.propertyNameIds[i];
@@ -118,6 +107,7 @@ sealed class Controller : MonoBehaviour
         _buffer = new RenderTexture(Screen.width, Screen.height, 0);
         _buffer.Create();
 
+        // UI initialization
         _mainView.texture = _buffer;
     }
 
@@ -144,15 +134,11 @@ sealed class Controller : MonoBehaviour
     void Update()
     {
         _material.SetVector
-           (ShaderID.DepthRange, new Vector2(_minDepth, _maxDepth));
-
+          (ShaderID.DepthRange, new Vector2(_minDepth, _maxDepth));
+        _material.SetMatrix
+          (ShaderID.Metadata, new Metadata(_camera.transform, _projection,
+                                           _minDepth, _maxDepth).AsMatrix);
         Graphics.Blit(null, _buffer, _material);
-
-        /*
-        Debug.Log($"{_projection[0, 0]}, {_projection[0, 2]}, " +
-                  $"{_projection[1, 1]}, {_projection[1, 2]}, " +
-                  $"{_projection[2, 2]}, {_projection[2, 3]}");
-        */
     }
 
     #endregion
