@@ -55,7 +55,7 @@ void Fragment(float4 position : SV_Position,
 
     // Coloring
     c.rgb = lerp(c.rgb, float3(1, 1, 1), Gridline(p * 10));
-    c.rgb = lerp(c.rgb, float3(1, 0, 0), c.a * 0.5);
+    c.rgb = lerp(c.rgb, float3(1, 0, 1), c.a * 0.5);
 
     // Output
     outColor = c;
