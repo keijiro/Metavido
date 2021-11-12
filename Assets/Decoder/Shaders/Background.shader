@@ -24,6 +24,13 @@ float3 DistanceToWorldPosition(float2 uv, float d)
     return mul(_InverseViewMatrix, float4(p * d, 1)).xyz;
 }
 
+// 3-axis Gridline
+float Gridline(float3 p)
+{
+    float3 b = 1 - saturate(0.5 * min(frac(1 - p), frac(p)) / fwidth(p));
+    return max(max(b.x, b.y), b.z);
+}
+
 void Vertex(uint vid : SV_VertexID,
             out float4 outPosition : SV_Position,
             out float2 outTexCoord : TEXCOORD0)
@@ -47,8 +54,7 @@ void Fragment(float4 position : SV_Position,
     float3 p = DistanceToWorldPosition(texCoord, d);
 
     // Coloring
-    float3 l = smoothstep(0.98, 1, abs(0.5 - frac(p * 10)) * 2);
-    c.rgb = saturate(c.rgb + max(max(l.x, l.y), l.z));
+    c.rgb = lerp(c.rgb, float3(1, 1, 1), Gridline(p * 10));
     c.rgb = lerp(c.rgb, float3(1, 0, 0), c.a * 0.5);
 
     // Output
