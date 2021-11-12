@@ -6,7 +6,7 @@ sealed class CameraController : MonoBehaviour
 {
     [SerializeField] MetadataDecoder _decoder = null;
 
-    void Update()
+    void LateUpdate()
     {
         transform.position = _decoder.CameraPosition;
         transform.rotation = _decoder.CameraRotation;

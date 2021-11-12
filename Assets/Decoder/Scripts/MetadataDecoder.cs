@@ -14,7 +14,7 @@ sealed class MetadataDecoder : MonoBehaviour
 
     #region Public accessor properties
 
-    public bool IsReady => _texture.buffer != null;
+    public bool IsReady => _texture.color != null;
 
     public RenderTexture ColorTexture => _texture.color;
     public RenderTexture DepthTexture => _texture.depth;
@@ -35,7 +35,7 @@ sealed class MetadataDecoder : MonoBehaviour
 
     #region Private members
 
-    (Texture2D buffer, RenderTexture color, RenderTexture depth) _texture;
+    (RenderTexture color, RenderTexture depth) _texture;
     (GraphicsBuffer buffer, Matrix4x4[] array) _readback;
     Material _demuxMaterial;
     Metadata _metadata;
@@ -53,7 +53,6 @@ sealed class MetadataDecoder : MonoBehaviour
 
     void OnDestroy()
     {
-        Destroy(_texture.buffer);
         Destroy(_texture.color);
         Destroy(_texture.depth);
         _readback.buffer.Dispose();
@@ -65,8 +64,8 @@ sealed class MetadataDecoder : MonoBehaviour
         var video = GetComponent<VideoPlayer>();
         if (video.texture == null) return;
         PrepareTexture(video.texture);
-        RunDecoder();
-        RunDemuxer();
+        RunDecoder(video.texture);
+        RunDemuxer(video.texture);
     }
 
     #endregion
@@ -75,30 +74,28 @@ sealed class MetadataDecoder : MonoBehaviour
 
     void PrepareTexture(Texture source)
     {
-        if (_texture.buffer == null)
+        if (_texture.color == null)
         {
             var (w, h) = (source.width, source.height);
-            _texture.buffer = GfxUtil.RGBATexture(w, h);
             _texture.color = GfxUtil.RGBARenderTexture(w / 2, h);
             _texture.depth = GfxUtil.RHalfRenderTexture(w / 2, h / 2);
         }
-        Graphics.CopyTexture(source, _texture.buffer);
     }
 
-    void RunDecoder()
+    void RunDecoder(Texture source)
     {
-        _decodeShader.SetTexture(0, "Source", _texture.buffer);
+        _decodeShader.SetTexture(0, "Source", source);
         _decodeShader.SetBuffer(0, "Output", _readback.buffer);
         _decodeShader.Dispatch(0, 1, 1, 1);
         _readback.buffer.GetData(_readback.array);
         _metadata = new Metadata(_readback.array[0]);
     }
 
-    void RunDemuxer()
+    void RunDemuxer(Texture source)
     {
         _demuxMaterial.SetVector(ShaderID.DepthRange, _metadata.DepthRange);
-        Graphics.Blit(_texture.buffer, _texture.color, _demuxMaterial, 0);
-        Graphics.Blit(_texture.buffer, _texture.depth, _demuxMaterial, 1);
+        Graphics.Blit(source, _texture.color, _demuxMaterial, 0);
+        Graphics.Blit(source, _texture.depth, _demuxMaterial, 1);
     }
 
     #endregion
