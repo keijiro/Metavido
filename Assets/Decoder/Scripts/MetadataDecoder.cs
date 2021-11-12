@@ -1,16 +1,10 @@
 using UnityEngine;
 using UnityEngine.Video;
 
-namespace Bibcam {
+namespace Bibcam.Decoder {
 
-sealed class Decoder : MonoBehaviour
+sealed class MetadataDecoder : MonoBehaviour
 {
-    #region External scene object references
-
-    [SerializeField] VideoPlayer _source = null;
-
-    #endregion
-
     #region Hidden external asset references
 
     [SerializeField, HideInInspector] Shader _demuxShader = null;
@@ -39,12 +33,12 @@ sealed class Decoder : MonoBehaviour
 
     #endregion
 
-    #region Private objects
+    #region Private members
 
     (Texture2D buffer, RenderTexture color, RenderTexture depth) _texture;
     (GraphicsBuffer buffer, Matrix4x4[] array) _readback;
-    Metadata _metadata;
     Material _demuxMaterial;
+    Metadata _metadata;
 
     #endregion
 
@@ -68,8 +62,9 @@ sealed class Decoder : MonoBehaviour
 
     void Update()
     {
-        if (_source.texture == null) return;
-        PrepareTexture(_source.texture);
+        var video = GetComponent<VideoPlayer>();
+        if (video.texture == null) return;
+        PrepareTexture(video.texture);
         RunDecoder();
         RunDemuxer();
     }
@@ -109,4 +104,4 @@ sealed class Decoder : MonoBehaviour
     #endregion
 }
 
-} // namespace Bibcam
+} // namespace Bibcam.Decoder

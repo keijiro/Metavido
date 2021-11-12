@@ -1,14 +1,12 @@
 using UnityEngine;
 
-namespace Bibcam {
+namespace Bibcam.Decoder {
 
-sealed class Background : MonoBehaviour
+sealed class BackgroundRenderer : MonoBehaviour
 {
     #region External scene object references
 
-    [Space]
-    [SerializeField] Camera _camera = null;
-    [SerializeField] Decoder _decoder = null;
+    [SerializeField] MetadataDecoder _decoder = null;
 
     #endregion
 
@@ -34,22 +32,26 @@ sealed class Background : MonoBehaviour
 
     void Update()
     {
-        var pm = _camera.projectionMatrix;
+        var camera = GetComponent<Camera>();
+
+        var pm = camera.projectionMatrix;
         var pv = new Vector4(pm[0, 2], pm[1, 2], pm[0, 0], pm[1, 1]);
 
-        var v2w = Matrix4x4.TRS
-          (_camera.transform.position,
-           _camera.transform.rotation,
-           new Vector3(1, 1, -1));
+        var v2w = Matrix4x4.TRS(camera.transform.position,
+                                camera.transform.rotation,
+                                new Vector3(1, 1, -1));
 
         _material.SetVector(ShaderID.ProjectionVector, pv);
         _material.SetMatrix(ShaderID.InverseViewMatrix, v2w);
+
         _material.SetTexture(ShaderID.ColorTexture, _decoder.ColorTexture);
         _material.SetTexture(ShaderID.DepthTexture, _decoder.DepthTexture);
     }
 
     void OnRenderObject()
     {
+        var camera = GetComponent<Camera>();
+        if (camera != Camera.current) return;
         _material.SetPass(0);
         Graphics.DrawProceduralNow(MeshTopology.Triangles, 6, 1);
     }
@@ -57,4 +59,4 @@ sealed class Background : MonoBehaviour
     #endregion
 }
 
-} // namespace Bibcam
+} // namespace Bibcam.Decoder
