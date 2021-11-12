@@ -26,6 +26,7 @@ readonly struct Metadata
 
     public float MinDepth => _data.m03;
     public float MaxDepth => _data.m13;
+    public Vector2 DepthRange => new Vector2(_data.m03, _data.m13);
 
     #endregion
 

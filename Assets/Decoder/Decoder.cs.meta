@@ -5,9 +5,9 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - _source: {instanceID: 0}
-  - _camera: {instanceID: 0}
-  - _shader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
-  executionOrder: 0
+  - _demuxShader: {fileID: 4800000, guid: add5a8d52e2e749119e249f0a762eb85, type: 3}
+  - _decodeShader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
+  executionOrder: -500
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

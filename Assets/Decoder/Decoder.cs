@@ -7,23 +7,44 @@ sealed class Decoder : MonoBehaviour
 {
     #region External scene object references
 
-    [Space]
     [SerializeField] VideoPlayer _source = null;
-    [SerializeField] Camera _camera = null;
 
     #endregion
 
     #region Hidden external asset references
 
-    [SerializeField, HideInInspector] ComputeShader _shader = null;
+    [SerializeField, HideInInspector] Shader _demuxShader = null;
+    [SerializeField, HideInInspector] ComputeShader _decodeShader = null;
+
+    #endregion
+
+    #region Public accessor properties
+
+    public bool IsReady => _texture.buffer != null;
+
+    public RenderTexture ColorTexture => _texture.color;
+    public RenderTexture DepthTexture => _texture.depth;
+
+    public Vector3 CameraPosition
+      => IsReady ? _metadata.CameraPosition : Vector3.zero;
+
+    public Quaternion CameraRotation
+      => IsReady ? _metadata.CameraRotation : Quaternion.identity;
+
+    public Matrix4x4 ProjectionMatrix
+      => IsReady ? _metadata.ProjectionMatrix : Matrix4x4.identity;
+
+    public Matrix4x4 CameraToWorldMatrix
+      => Matrix4x4.TRS(CameraPosition, CameraRotation, new Vector3(1, 1, -1));
 
     #endregion
 
     #region Private objects
 
-    Texture2D _texture;
-    GraphicsBuffer _buffer;
-    Matrix4x4[] _readback;
+    (Texture2D buffer, RenderTexture color, RenderTexture depth) _texture;
+    (GraphicsBuffer buffer, Matrix4x4[] array) _readback;
+    Metadata _metadata;
+    Material _demuxMaterial;
 
     #endregion
 
@@ -31,37 +52,58 @@ sealed class Decoder : MonoBehaviour
 
     void Start()
     {
-        _buffer = new GraphicsBuffer
-          (GraphicsBuffer.Target.Structured, 16, sizeof(float));
-        _readback = new Matrix4x4[1];
+        _readback.buffer = GfxUtil.StructuredBuffer(16, sizeof(float));
+        _readback.array = new Matrix4x4[1];
+        _demuxMaterial = new Material(_demuxShader);
     }
 
     void OnDestroy()
     {
-        if (_texture != null) Destroy(_texture);
-        if (_buffer != null) _buffer.Dispose();
+        Destroy(_texture.buffer);
+        Destroy(_texture.color);
+        Destroy(_texture.depth);
+        _readback.buffer.Dispose();
+        Destroy(_demuxMaterial);
     }
 
     void Update()
     {
-        var src = _source.texture;
-        if (src == null) return;
+        if (_source.texture == null) return;
+        PrepareTexture(_source.texture);
+        RunDecoder();
+        RunDemuxer();
+    }
 
-        if (_texture == null)
-            _texture = new Texture2D
-              (src.width, src.height, TextureFormat.RGBA32, false);
+    #endregion
 
-        Graphics.CopyTexture(src, _texture);
+    #region Private methods
 
-        _shader.SetTexture(0, "Source", _texture);
-        _shader.SetBuffer(0, "Output", _buffer);
-        _shader.Dispatch(0, 1, 1, 1);
-        _buffer.GetData(_readback);
+    void PrepareTexture(Texture source)
+    {
+        if (_texture.buffer == null)
+        {
+            var (w, h) = (source.width, source.height);
+            _texture.buffer = GfxUtil.RGBATexture(w, h);
+            _texture.color = GfxUtil.RGBARenderTexture(w / 2, h);
+            _texture.depth = GfxUtil.RHalfRenderTexture(w / 2, h / 2);
+        }
+        Graphics.CopyTexture(source, _texture.buffer);
+    }
 
-        var meta = new Metadata(_readback[0]);
-        _camera.transform.position = meta.CameraPosition;
-        _camera.transform.rotation = meta.CameraRotation;
-        _camera.projectionMatrix = meta.ProjectionMatrix;
+    void RunDecoder()
+    {
+        _decodeShader.SetTexture(0, "Source", _texture.buffer);
+        _decodeShader.SetBuffer(0, "Output", _readback.buffer);
+        _decodeShader.Dispatch(0, 1, 1, 1);
+        _readback.buffer.GetData(_readback.array);
+        _metadata = new Metadata(_readback.array[0]);
+    }
+
+    void RunDemuxer()
+    {
+        _demuxMaterial.SetVector(ShaderID.DepthRange, _metadata.DepthRange);
+        Graphics.Blit(_texture.buffer, _texture.color, _demuxMaterial, 0);
+        Graphics.Blit(_texture.buffer, _texture.depth, _demuxMaterial, 1);
     }
 
     #endregion
