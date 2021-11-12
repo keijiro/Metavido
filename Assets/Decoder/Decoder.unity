@@ -165,8 +165,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 2
+  near clip plane: 0.05
+  far clip plane: 20
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -237,6 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1618752107}
   - component: {fileID: 1618752106}
+  - component: {fileID: 1618752110}
   - component: {fileID: 1618752109}
   - component: {fileID: 1618752108}
   m_Layer: 0
@@ -322,3 +323,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
+--- !u!114 &1618752110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618752105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d8e40962234dc2929489294cb907f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _decoder: {fileID: 1618752109}
+  _demuxer: {fileID: 1618752108}

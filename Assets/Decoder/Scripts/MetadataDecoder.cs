@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace Bibcam.Decoder {
 
@@ -11,9 +10,19 @@ sealed class MetadataDecoder : MonoBehaviour
 
     #endregion
 
-    #region Public accessor properties
+    #region Public members
 
     public ref readonly Metadata Metadata => ref _metadata;
+
+    public void Decode(Texture source)
+    {
+        _shader.SetTexture(0, "Source", source);
+        _shader.SetBuffer(0, "Output", _readbackBuffer);
+        _shader.Dispatch(0, 1, 1, 1);
+
+        _readbackBuffer.GetData(_readbackArray);
+        _metadata = new Metadata(_readbackArray[0]);
+    }
 
     #endregion
 
@@ -35,19 +44,6 @@ sealed class MetadataDecoder : MonoBehaviour
 
     void OnDestroy()
       => _readbackBuffer.Dispose();
-
-    void Update()
-    {
-        var video = GetComponent<VideoPlayer>();
-        if (video.texture == null) return;
-
-        _shader.SetTexture(0, "Source", video.texture);
-        _shader.SetBuffer(0, "Output", _readbackBuffer);
-        _shader.Dispatch(0, 1, 1, 1);
-
-        _readbackBuffer.GetData(_readbackArray);
-        _metadata = new Metadata(_readbackArray[0]);
-    }
 
     #endregion
 }
