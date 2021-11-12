@@ -136,11 +136,12 @@ sealed class Encoder : MonoBehaviour
 
     void LateUpdate()
     {
-        _material.SetVector
-          (ShaderID.DepthRange, new Vector2(_minDepth, _maxDepth));
-        _material.SetMatrix
-          (ShaderID.Metadata, new Metadata(_camera.transform, _projection,
-                                           _minDepth, _maxDepth).AsMatrix);
+        var range = new Vector2(_minDepth, _maxDepth);
+        var meta = new Metadata(_camera.transform, _projection, range);
+
+        _material.SetVector(ShaderID.DepthRange, range);
+        _material.SetMatrix(ShaderID.Metadata, meta.AsMatrix);
+
         Graphics.Blit(null, _buffer, _material);
     }
 

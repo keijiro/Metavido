@@ -17,15 +17,6 @@ static class ShaderID
     public static readonly int ProjectionVector = Shader.PropertyToID("_ProjectionVector");
 }
 
-static class MathUtil
-{
-    public static Quaternion NormalizedRotation(in Vector3 v)
-    {
-        var w = Mathf.Sqrt(1 - Vector3.Dot(v, v));
-        return new Quaternion(v.x, v.y, v.z, w);
-    }
-}
-
 static class GfxUtil
 {
     public static Texture2D RGBATexture(int width, int height)

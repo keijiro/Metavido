@@ -9,6 +9,7 @@ sealed class CameraController : MonoBehaviour
     void LateUpdate()
     {
         var meta = _decoder.Metadata;
+        if (!meta.IsValid) return;
         transform.position = meta.CameraPosition;
         transform.rotation = meta.CameraRotation;
         GetComponent<Camera>().projectionMatrix = meta.ProjectionMatrix;
