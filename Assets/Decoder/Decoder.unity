@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a5ee19bd9835470293185ee5602179a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _decoder: {fileID: 1618752108}
+  _decoder: {fileID: 1618752109}
 --- !u!114 &153388035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbdafefe6557a4f0c8c063f5e07e0c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _decoder: {fileID: 1618752108}
+  _demux: {fileID: 1618752108}
   _shader: {fileID: 4800000, guid: b9eb90f7526a94194b73cae0832d7587, type: 3}
 --- !u!1 &1618752105
 GameObject:
@@ -237,6 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1618752107}
   - component: {fileID: 1618752106}
+  - component: {fileID: 1618752109}
   - component: {fileID: 1618752108}
   m_Layer: 0
   m_Name: Source
@@ -304,8 +305,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618752105}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94509387823624a3db4b2fb0c365adb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shader: {fileID: 4800000, guid: add5a8d52e2e749119e249f0a762eb85, type: 3}
+--- !u!114 &1618752109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618752105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1aa41795cc9074639ac9f9bd16fd57ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _demuxShader: {fileID: 4800000, guid: add5a8d52e2e749119e249f0a762eb85, type: 3}
-  _decodeShader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
+  _shader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}

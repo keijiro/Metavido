@@ -7,37 +7,20 @@ sealed class MetadataDecoder : MonoBehaviour
 {
     #region Hidden external asset references
 
-    [SerializeField, HideInInspector] Shader _demuxShader = null;
-    [SerializeField, HideInInspector] ComputeShader _decodeShader = null;
+    [SerializeField, HideInInspector] ComputeShader _shader = null;
 
     #endregion
 
     #region Public accessor properties
 
-    public bool IsReady => _texture.color != null;
-
-    public RenderTexture ColorTexture => _texture.color;
-    public RenderTexture DepthTexture => _texture.depth;
-
-    public Vector3 CameraPosition
-      => IsReady ? _metadata.CameraPosition : Vector3.zero;
-
-    public Quaternion CameraRotation
-      => IsReady ? _metadata.CameraRotation : Quaternion.identity;
-
-    public Matrix4x4 ProjectionMatrix
-      => IsReady ? _metadata.ProjectionMatrix : Matrix4x4.identity;
-
-    public Matrix4x4 CameraToWorldMatrix
-      => Matrix4x4.TRS(CameraPosition, CameraRotation, new Vector3(1, 1, -1));
+    public ref readonly Metadata Metadata => ref _metadata;
 
     #endregion
 
     #region Private members
 
-    (RenderTexture color, RenderTexture depth) _texture;
-    (GraphicsBuffer buffer, Matrix4x4[] array) _readback;
-    Material _demuxMaterial;
+    GraphicsBuffer _readbackBuffer;
+    Matrix4x4[] _readbackArray;
     Metadata _metadata;
 
     #endregion
@@ -46,56 +29,24 @@ sealed class MetadataDecoder : MonoBehaviour
 
     void Start()
     {
-        _readback.buffer = GfxUtil.StructuredBuffer(16, sizeof(float));
-        _readback.array = new Matrix4x4[1];
-        _demuxMaterial = new Material(_demuxShader);
+        _readbackBuffer = GfxUtil.StructuredBuffer(16, sizeof(float));
+        _readbackArray = new Matrix4x4[1];
     }
 
     void OnDestroy()
-    {
-        Destroy(_texture.color);
-        Destroy(_texture.depth);
-        _readback.buffer.Dispose();
-        Destroy(_demuxMaterial);
-    }
+      => _readbackBuffer.Dispose();
 
     void Update()
     {
         var video = GetComponent<VideoPlayer>();
         if (video.texture == null) return;
-        PrepareTexture(video.texture);
-        RunDecoder(video.texture);
-        RunDemuxer(video.texture);
-    }
 
-    #endregion
+        _shader.SetTexture(0, "Source", video.texture);
+        _shader.SetBuffer(0, "Output", _readbackBuffer);
+        _shader.Dispatch(0, 1, 1, 1);
 
-    #region Private methods
-
-    void PrepareTexture(Texture source)
-    {
-        if (_texture.color == null)
-        {
-            var (w, h) = (source.width, source.height);
-            _texture.color = GfxUtil.RGBARenderTexture(w / 2, h);
-            _texture.depth = GfxUtil.RHalfRenderTexture(w / 2, h / 2);
-        }
-    }
-
-    void RunDecoder(Texture source)
-    {
-        _decodeShader.SetTexture(0, "Source", source);
-        _decodeShader.SetBuffer(0, "Output", _readback.buffer);
-        _decodeShader.Dispatch(0, 1, 1, 1);
-        _readback.buffer.GetData(_readback.array);
-        _metadata = new Metadata(_readback.array[0]);
-    }
-
-    void RunDemuxer(Texture source)
-    {
-        _demuxMaterial.SetVector(ShaderID.DepthRange, _metadata.DepthRange);
-        Graphics.Blit(source, _texture.color, _demuxMaterial, 0);
-        Graphics.Blit(source, _texture.depth, _demuxMaterial, 1);
+        _readbackBuffer.GetData(_readbackArray);
+        _metadata = new Metadata(_readbackArray[0]);
     }
 
     #endregion

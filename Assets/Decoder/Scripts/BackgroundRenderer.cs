@@ -6,7 +6,7 @@ sealed class BackgroundRenderer : MonoBehaviour
 {
     #region External scene object references
 
-    [SerializeField] MetadataDecoder _decoder = null;
+    [SerializeField] TextureDemuxer _demux = null;
 
     #endregion
 
@@ -48,8 +48,8 @@ sealed class BackgroundRenderer : MonoBehaviour
         // Material property update
         _material.SetVector(ShaderID.ProjectionVector, pv);
         _material.SetMatrix(ShaderID.InverseViewMatrix, v2w);
-        _material.SetTexture(ShaderID.ColorTexture, _decoder.ColorTexture);
-        _material.SetTexture(ShaderID.DepthTexture, _decoder.DepthTexture);
+        _material.SetTexture(ShaderID.ColorTexture, _demux.ColorTexture);
+        _material.SetTexture(ShaderID.DepthTexture, _demux.DepthTexture);
 
         // Fullscreen quad drawcall
         _material.SetPass(0);
