@@ -369,7 +369,7 @@ MonoBehaviour:
   m_HumanSegmentationStencilMode: 3
   m_HumanSegmentationDepthMode: 2
   m_EnvironmentDepthMode: 3
-  m_EnvironmentDepthTemporalSmoothing: 1
+  m_EnvironmentDepthTemporalSmoothing: 0
   m_OcclusionPreferenceMode: 0
 --- !u!1 &892374984
 GameObject:
@@ -560,8 +560,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3859a92a05d4f5d418cb6ca605290e74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AttemptUpdate: 1
-  m_MatchFrameRate: 1
+  m_AttemptUpdate: 0
+  m_MatchFrameRate: 0
   m_TrackingMode: 2
 --- !u!4 &1579875306
 Transform:

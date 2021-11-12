@@ -100,6 +100,9 @@ sealed class Encoder : MonoBehaviour
 
     void Start()
     {
+        // System settings
+        Application.targetFrameRate = 60;
+
         // Shader setup
         _material = new Material(_shader);
 
@@ -131,7 +134,7 @@ sealed class Encoder : MonoBehaviour
         _occlusionManager.frameReceived -= OnOcclusionFrameReceived;
     }
 
-    void Update()
+    void LateUpdate()
     {
         _material.SetVector
           (ShaderID.DepthRange, new Vector2(_minDepth, _maxDepth));
