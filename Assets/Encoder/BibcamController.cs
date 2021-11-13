@@ -7,21 +7,18 @@ sealed class BibcamController : MonoBehaviour
 {
     #region Scene object references
 
-    [Space]
     [SerializeField] Camera _camera = null;
     [SerializeField] RawImage _mainView = null;
+    [SerializeField] GameObject _uiRoot = null;
+    [SerializeField] Slider _depthSlider = null;
+    [SerializeField] Text _depthLabel = null;
 
     #endregion
 
-    #region Editable parameters
+    #region Public members (exposed for UI)
 
-    [Space]
-    [SerializeField] float _minDepth = 0.2f;
-    [SerializeField] float _maxDepth = 5.0f;
-
-    #endregion
-
-    #region Public methods (UI callback)
+    public void ToggleUI()
+      => _uiRoot.SetActive(!_uiRoot.activeSelf);
 
     public void ResetOrigin()
       => _camera.transform.parent.position = -_camera.transform.localPosition;
@@ -32,15 +29,19 @@ sealed class BibcamController : MonoBehaviour
 
     void Start()
     {
-        // System settings
         Application.targetFrameRate = 60;
-
-        // UI initialization
         _mainView.texture = GetComponent<BibcamEncoder>().EncodedTexture;
+        _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
     }
 
     void LateUpdate()
-      => GetComponent<BibcamEncoder>().Encode(_camera, _minDepth, _maxDepth);
+    {
+        var maxDepth = _depthSlider.value;
+        var minDepth = maxDepth / 20;
+        GetComponent<BibcamEncoder>().Encode(_camera, minDepth, maxDepth);
+        _depthLabel.text = $"Depth Range: {minDepth:0.00} - {maxDepth:0.00}";
+        PlayerPrefs.SetFloat("DepthSlider", maxDepth);
+    }
 
     #endregion
 }
