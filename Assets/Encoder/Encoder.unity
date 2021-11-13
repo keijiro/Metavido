@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 476498931}
+  - component: {fileID: 476498933}
   - component: {fileID: 476498932}
   m_Layer: 0
   m_Name: Controller
@@ -167,13 +168,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a783d6cd443845f480e68d807a6ebc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 668977012}
   _cameraManager: {fileID: 668977015}
   _occlusionManager: {fileID: 668977018}
+  _shader: {fileID: 4800000, guid: 948b9b391aa114ce1be11a827d6a6d13, type: 3}
+--- !u!114 &476498933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476498929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a2cca50558814a8292a3b2c1b18c6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 668977012}
   _mainView: {fileID: 668665627}
   _minDepth: 0.2
-  _maxDepth: 3.2
-  _shader: {fileID: 4800000, guid: 948b9b391aa114ce1be11a827d6a6d13, type: 3}
+  _maxDepth: 5
 --- !u!1 &668665626
 GameObject:
   m_ObjectHideFlags: 0

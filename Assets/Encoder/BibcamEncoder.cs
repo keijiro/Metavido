@@ -1,30 +1,18 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 
 namespace Bibcam {
 
-sealed class Encoder : MonoBehaviour
+sealed class BibcamEncoder : MonoBehaviour
 {
-    #region External scene object references
+    #region Scene object references
 
-    [Space]
-    [SerializeField] Camera _camera = null;
     [SerializeField] ARCameraManager _cameraManager = null;
     [SerializeField] AROcclusionManager _occlusionManager = null;
-    [SerializeField] RawImage _mainView = null;
 
     #endregion
 
-    #region Editable parameters
-
-    [Space]
-    [SerializeField] float _minDepth = 0.2f;
-    [SerializeField] float _maxDepth = 3.2f;
-
-    #endregion
-
-    #region Hidden external asset references
+    #region Hidden asset references
 
     [SerializeField, HideInInspector] Shader _shader = null;
 
@@ -34,14 +22,27 @@ sealed class Encoder : MonoBehaviour
 
     Matrix4x4 _projection;
     Material _material;
-    RenderTexture _buffer;
+    RenderTexture _encoded;
 
     #endregion
 
-    #region Public methods (UI callback)
+    #region Public members
 
-    public void ResetOrigin()
-      => _camera.transform.parent.position = -_camera.transform.localPosition;
+    public Texture EncodedTexture => _encoded;
+
+    public void Encode(Camera camera, float minDepth, float maxDepth)
+    {
+        // Aspect ratio compensation (camera vs. 16:9)
+        var proj = _projection;
+        proj[1, 1] *= (16.0f / 9) / camera.aspect;
+
+        // Blit with the encoding/muxing shader
+        var range = new Vector2(minDepth, maxDepth);
+        var meta = new Metadata(camera.transform, proj, range);
+        _material.SetVector(ShaderID.DepthRange, range);
+        _material.SetMatrix(ShaderID.Metadata, meta.AsMatrix);
+        Graphics.Blit(null, _encoded, _material);
+    }
 
     #endregion
 
@@ -65,11 +66,7 @@ sealed class Encoder : MonoBehaviour
 
         // Projection matrix
         if (args.projectionMatrix.HasValue)
-        {
             _projection = args.projectionMatrix.Value;
-            // Aspect ratio compensation (camera vs. 16:9)
-            _projection[1, 1] *= (16.0f / 9) / _camera.aspect;
-        }
 
         // Source texture aspect ratio
         var tex1 = args.textures[0];
@@ -100,24 +97,14 @@ sealed class Encoder : MonoBehaviour
 
     void Start()
     {
-        // System settings
-        Application.targetFrameRate = 60;
-
-        // Shader setup
         _material = new Material(_shader);
-
-        // Multiplexing buffer
-        _buffer = new RenderTexture(Screen.width, Screen.height, 0);
-        _buffer.Create();
-
-        // UI initialization
-        _mainView.texture = _buffer;
+        _encoded = new RenderTexture(Screen.width, Screen.height, 0);
     }
 
     void OnDestroy()
     {
         Destroy(_material);
-        Destroy(_buffer);
+        Destroy(_encoded);
     }
 
     void OnEnable()
@@ -132,17 +119,6 @@ sealed class Encoder : MonoBehaviour
         // Camera callback termination
         _cameraManager.frameReceived -= OnCameraFrameReceived;
         _occlusionManager.frameReceived -= OnOcclusionFrameReceived;
-    }
-
-    void LateUpdate()
-    {
-        var range = new Vector2(_minDepth, _maxDepth);
-        var meta = new Metadata(_camera.transform, _projection, range);
-
-        _material.SetVector(ShaderID.DepthRange, range);
-        _material.SetMatrix(ShaderID.Metadata, meta.AsMatrix);
-
-        Graphics.Blit(null, _buffer, _material);
     }
 
     #endregion
