@@ -1,18 +1,18 @@
 #pragma kernel Decoder
 
+#include "../../Common/Shaders/Common.hlsl"
+
 Texture2D<float4> Source;
 RWStructuredBuffer<float> Output;
 
 [numthreads(4, 4, 1)]
 void Decoder(uint2 id : SV_DispatchThreadID)
 {
-    const float margin = 0.02;
-
     uint width, height;
     Source.GetDimensions(width, height);
 
     uint acc = 0;
-    uint x = width * margin * (id.x + 0.5) / 4;
+    uint x = width * MetadataWidth * (id.x + 0.5) / 4;
 
     for (uint i = 0; i < 32; i++)
     {

@@ -7,15 +7,10 @@ Shader "Hidden/Bibcam/Demux"
 
     CGINCLUDE
 
+#include "../../Common/Shaders/Common.hlsl"
+
 sampler2D _MainTex;
 float2 _DepthRange;
-
-float2 UVMargin(float2 uv)
-{
-    const float margin = 0.02;
-    uv.x = lerp(margin, 1, uv.x);
-    return uv;
-}
 
 void Vertex(float4 position : POSITION,
             float2 texCoord : TEXCOORD,
@@ -29,36 +24,16 @@ void Vertex(float4 position : POSITION,
 float4 FragmentColor(float4 position : SV_Position,
                      float2 texCoord : TEXCOORD0) : SV_Target
 {
-    float2 uv1 = UVMargin(texCoord * float2(0.5, 1.0));
-    float2 uv2 = UVMargin(texCoord * float2(0.5, 0.5) + float2(0.5, 0));
-    float3 rgb = tex2D(_MainTex, uv1).xyz;
-    float mask = tex2D(_MainTex, uv2).x;
-    return float4(rgb, mask);
-}
-
-// Hue value calculation
-float RGB2Hue(float3 c)
-{
-    float minc = min(min(c.r, c.g), c.b);
-    float maxc = max(max(c.r, c.g), c.b);
-    float div = 1 / (6 * max(maxc - minc, 1e-5));
-    float r = (c.g - c.b) * div;
-    float g = 1.0 / 3 + (c.b - c.r) * div;
-    float b = 2.0 / 3 + (c.r - c.g) * div;
-    return lerp(r, lerp(g, b, c.g < c.b), c.r < max(c.g, c.b));
-}
-
-// Depth calculation
-float RGB2Depth(float3 rgb)
-{
-    return lerp(_DepthRange.x, _DepthRange.y, RGB2Hue(rgb));
+    float3 rgb = tex2D(_MainTex, UV_ColorToFull(texCoord)).xyz;
+    float a = tex2D(_MainTex, UV_StencilToFull(texCoord)).x;
+    return float4(rgb, a);
 }
 
 float4 FragmentDepth(float4 position : SV_Position,
                      float2 texCoord : TEXCOORD) : SV_Target
 {
-    float2 uv = UVMargin(texCoord * float2(0.5, 0.5) + float2(0.5, 0.5));
-    return RGB2Depth(tex2D(_MainTex, uv).xyz);
+    float hue = RGB2Hue(tex2D(_MainTex, UV_DepthToFull(texCoord)).xyz);
+    return lerp(_DepthRange.x, _DepthRange.y, hue);
 }
 
     ENDCG
