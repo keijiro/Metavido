@@ -41,70 +41,70 @@ bool EncodeMetadata(in float4x4 data, float2 uv)
 //
 // UV coordinate remapping functions
 //
-// +-+---+---+
-// | |   | S |  M: Metadata
-// |M| C +---+  C: Color
-// | |   | Z |  S: Human stencil
-// +-+---+---+  Z: Hue-encoded depth
+// +---+---+-+  S: Human stencil
+// | S |   | |  Z: Hue-encoded depth
+// +---+ C |M|  C: Color
+// | Z |   | |  M: Metadata
+// +---+---+-+
 //
 
 static const float MetadataWidth = 0.02;
 
 float2 UV_FullToMeta(float2 uv)
 {
-    uv.x /= MetadataWidth;
+    uv.x = (uv.x - 1 + MetadataWidth) / MetadataWidth;
     return uv;
 }
 
 float2 UV_FullToCZS(float2 uv)
 {
-    uv.x = (uv.x - MetadataWidth) / (1 - MetadataWidth);
+    uv.x /= 1 - MetadataWidth;
     return uv;
 }
 
 float2 UV_FullToColor(float2 uv)
 {
     uv = UV_FullToCZS(uv);
-    uv.x *= 2;
+    uv.x = uv.x * 2 - 1;
     return uv;
-}
-
-float2 UV_FullToStencil(float2 uv)
-{
-    return UV_FullToCZS(uv) * 2 - 1;
 }
 
 float2 UV_FullToDepth(float2 uv)
 {
+    return UV_FullToCZS(uv) * 2;
+}
+
+float2 UV_FullToStencil(float2 uv)
+{
     uv = UV_FullToCZS(uv) * 2;
-    uv.x -= 1;
+    uv.y -= 1;
     return uv;
 }
 
 float2 UV_MetaToFull(float2 uv)
 {
-    uv.x *= MetadataWidth;
+    uv.x = lerp(1 - MetadataWidth, 1, uv.x);
     return uv;
 }
 
 float2 UV_CZSToFull(float2 uv)
 {
-    uv.x = lerp(MetadataWidth, 1, uv.x);
+    uv.x *= 1 - MetadataWidth;
     return uv;
 }
 
 float2 UV_ColorToFull(float2 uv)
 {
-    uv.x *= 0.5;
+    uv.x = lerp(0.5, 1, uv.x);
     return UV_CZSToFull(uv);
 }
 
 float2 UV_StencilToFull(float2 uv)
 {
-    return UV_CZSToFull(uv * 0.5 + float2(0.5, 0.5));
+    return UV_CZSToFull(uv * 0.5 + float2(0, 0.5));
 }
 
 float2 UV_DepthToFull(float2 uv)
 {
-    return UV_CZSToFull(uv * 0.5 + float2(0.5, 0));
+    return UV_CZSToFull(uv * 0.5);
 }

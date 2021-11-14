@@ -70,7 +70,7 @@ float4 Fragment(float4 position : SV_Position,
     float s = tex2D(_HumanStencil, uv_s).x;
 
     // Output
-    float3 rgb = uv_m.x < 1 ? m : (uv_c.x < 1 ? c : (texCoord.y < 0.5 ? z : s));
+    float3 rgb = uv_m.x > 0 ? m : (uv_c.x > 0 ? c : (texCoord.y < 0.5 ? z : s));
     return float4(rgb, 1);
 }
 
