@@ -32,6 +32,7 @@ sealed class BibcamController : MonoBehaviour
         Application.targetFrameRate = 60;
         _mainView.texture = GetComponent<BibcamEncoder>().EncodedTexture;
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
+        _uiRoot.SetActive(false);
     }
 
     void LateUpdate()
