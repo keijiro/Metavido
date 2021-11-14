@@ -17,7 +17,7 @@ float RGB2Hue(float3 c)
     float r = (c.g - c.b) * div;
     float g = 1.0 / 3 + (c.b - c.r) * div;
     float b = 2.0 / 3 + (c.r - c.g) * div;
-    return lerp(r, lerp(g, b, c.g < c.b), c.r < max(c.g, c.b));
+    return frac(lerp(r, lerp(g, b, c.g < c.b), c.r < max(c.g, c.b)) + 1);
 }
 
 // yCbCr decoding

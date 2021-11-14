@@ -37,7 +37,8 @@ sealed class BibcamEncoder : MonoBehaviour
         proj[1, 1] *= (16.0f / 9) / camera.aspect;
 
         // Blit with the encoding/muxing shader
-        var range = new Vector2(minDepth, maxDepth);
+        const float margin = 0.05f;
+        var range = new Vector3(minDepth, maxDepth / (1 - margin), margin);
         var meta = new Metadata(camera.transform, proj, range);
         _material.SetVector(ShaderID.DepthRange, range);
         _material.SetMatrix(ShaderID.Metadata, meta.AsMatrix);

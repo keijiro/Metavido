@@ -20,7 +20,7 @@ sampler2D _HumanStencil;
 sampler2D _EnvironmentDepth;
 
 // Additional camera parameters
-float2 _DepthRange;
+float3 _DepthRange;
 float _AspectFix;
 
 // Metadata as matrix
@@ -64,7 +64,7 @@ float4 Fragment(float4 position : SV_Position,
     // Hue-encoded depth
     float depth = tex2D(_EnvironmentDepth, uv_z).x;
     depth = (depth - _DepthRange.x) / (_DepthRange.y - _DepthRange.x);
-    float3 z = Hue2RGB(clamp(depth, 0, 0.8));
+    float3 z = Hue2RGB(clamp(depth, 0, 1 - _DepthRange.z));
 
     // Human stencil
     float s = tex2D(_HumanStencil, uv_s).x;
