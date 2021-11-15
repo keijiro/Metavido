@@ -7,6 +7,7 @@ Shader "Hidden/Bibcam/Demux"
 
     CGINCLUDE
 
+#include "UnityCG.cginc"
 #include "Packages/jp.keijiro.bibcam/Common/Shaders/Common.hlsl"
 
 sampler2D _MainTex;
@@ -32,8 +33,11 @@ float4 FragmentColor(float4 position : SV_Position,
 float4 FragmentDepth(float4 position : SV_Position,
                      float2 texCoord : TEXCOORD) : SV_Target
 {
-    float hue = RGB2Hue(tex2D(_MainTex, UV_DepthToFull(texCoord)).xyz);
-    return lerp(_DepthRange.x, _DepthRange.y, hue);
+    float3 rgb = tex2D(_MainTex, UV_DepthToFull(texCoord)).xyz;
+    #ifndef UNITY_NO_LINEAR_COLORSPACE
+    rgb = LinearToGammaSpace(rgb);
+    #endif
+    return lerp(_DepthRange.x, _DepthRange.y, RGB2Hue(rgb));
 }
 
     ENDCG

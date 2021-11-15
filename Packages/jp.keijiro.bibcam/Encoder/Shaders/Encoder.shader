@@ -11,6 +11,7 @@ Shader "Hidden/Bibcam/Encoder"
 
     CGINCLUDE
 
+#include "UnityCG.cginc"
 #include "Packages/jp.keijiro.bibcam/Common/Shaders/Common.hlsl"
 
 // Uniforms from AR Foundation
@@ -63,8 +64,16 @@ float4 Fragment(float4 position : SV_Position,
     // Human stencil
     float s = tex2D(_HumanStencil, UVFix(UV_FullToStencil(texCoord))).x;
 
+    // Multiplexing
+    float3 rgb = BibcamMux(texCoord, m, c, z, s);
+
+    // Linear color support
+    #ifndef UNITY_NO_LINEAR_COLORSPACE
+    rgb = GammaToLinearSpace(rgb);
+    #endif
+
     // Output
-    return float4(BibcamMux(texCoord, m, c, z, s), 1);
+    return float4(rgb, 1);
 }
 
     ENDCG
