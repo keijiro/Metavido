@@ -1,0 +1,23 @@
+{
+    "name": "Bibcam.Encoder",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b5f587414423d4dc59cf0a18bf95250a",
+        "GUID:a9420e37d7990b54abdef6688edbe313"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "0.0.1",
+            "define": "BIBCAM_HAS_ARFOUNDATION"
+        }
+    ],
+    "noEngineReferences": false
+}

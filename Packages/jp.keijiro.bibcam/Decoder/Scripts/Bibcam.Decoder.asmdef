@@ -1,0 +1,22 @@
+{
+    "name": "Bibcam.Decoder",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b5f587414423d4dc59cf0a18bf95250a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.modules.video",
+            "expression": "0.0.0",
+            "define": "BIBCAM_HAS_UNITY_VIDEO"
+        }
+    ],
+    "noEngineReferences": false
+}

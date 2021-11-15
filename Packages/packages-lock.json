@@ -80,6 +80,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "jp.keijiro.bibcam": {
+      "version": "file:jp.keijiro.bibcam",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.modules.audio": {
       "version": "1.0.0",
       "depth": 1,

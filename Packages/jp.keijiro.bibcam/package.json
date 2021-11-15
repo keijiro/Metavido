@@ -1,0 +1,12 @@
+{
+    "author": "Keijiro Takahashi",
+    "dependencies": { },
+    "description": "Burnt-In Barcode AR camera package",
+    "displayName": "Bibcam",
+    "keywords": [ "unity" ],
+    "license": "Unlicense",
+    "name": "jp.keijiro.bibcam",
+    "unity": "2021.1",
+    "unityRelease": "0f1",
+    "version": "0.0.1"
+}
