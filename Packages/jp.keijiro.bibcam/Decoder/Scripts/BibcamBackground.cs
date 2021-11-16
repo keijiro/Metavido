@@ -40,18 +40,13 @@ public sealed class BibcamBackground : MonoBehaviour
         // Run it only when the textures are ready.
         if (_demux.ColorTexture == null) return;
 
-        // Projection parameters
-        var pm = camera.projectionMatrix;
-        var pv = new Vector4(pm[0, 2], pm[1, 2], pm[0, 0], pm[1, 1]);
-
-        // Inverse view matrix
-        var v2w = Matrix4x4.TRS(camera.transform.position,
-                                camera.transform.rotation,
-                                new Vector3(1, 1, -1));
+        // Camera parameters
+        var ray = BibcamRenderUtils.RayParams(camera);
+        var iview = BibcamRenderUtils.InverseView(camera);
 
         // Material property update
-        _material.SetVector(ShaderID.ProjectionVector, pv);
-        _material.SetMatrix(ShaderID.InverseViewMatrix, v2w);
+        _material.SetVector(ShaderID.RayParams, ray);
+        _material.SetMatrix(ShaderID.InverseView, iview);
         _material.SetTexture(ShaderID.ColorTexture, _demux.ColorTexture);
         _material.SetTexture(ShaderID.DepthTexture, _demux.DepthTexture);
 

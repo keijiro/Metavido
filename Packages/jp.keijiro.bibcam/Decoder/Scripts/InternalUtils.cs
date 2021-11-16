@@ -1,4 +1,5 @@
 using UnityEngine;
+using Bibcam.Common;
 
 namespace Bibcam.Decoder {
 
@@ -7,8 +8,8 @@ static class ShaderID
     public static readonly int ColorTexture = Shader.PropertyToID("_ColorTexture");
     public static readonly int DepthRange = Shader.PropertyToID("_DepthRange");
     public static readonly int DepthTexture = Shader.PropertyToID("_DepthTexture");
-    public static readonly int InverseViewMatrix = Shader.PropertyToID("_InverseViewMatrix");
-    public static readonly int ProjectionVector = Shader.PropertyToID("_ProjectionVector");
+    public static readonly int InverseView = Shader.PropertyToID("_InverseView");
+    public static readonly int RayParams = Shader.PropertyToID("_RayParams");
 }
 
 static class GfxUtil

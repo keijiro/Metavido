@@ -2,27 +2,13 @@ Shader "Hidden/Bibcam/Background"
 {
     CGINCLUDE
 
+#include "Utils.hlsl"
+
 sampler2D _ColorTexture;
 sampler2D _DepthTexture;
-float4 _ProjectionVector;
-float4x4 _InverseViewMatrix;
+float4 _RayParams;
+float4x4 _InverseView;
 float _DepthOffset;
-
-// Linear distance to Z depth
-float DistanceToDepth(float d)
-{
-    return d < _ProjectionParams.y ? 0 :
-      (0.5 / _ZBufferParams.z * (1 / d - _ZBufferParams.w));
-}
-
-// Inversion projection into the world space
-float3 DistanceToWorldPosition(float2 uv, float d)
-{
-    float3 p = float3((uv - 0.5) * 2, -1);
-    p.xy += _ProjectionVector.xy;
-    p.xy /= _ProjectionVector.zw;
-    return mul(_InverseViewMatrix, float4(p * d, 1)).xyz;
-}
 
 // 3-axis Gridline
 float Gridline(float3 p)
@@ -51,7 +37,7 @@ void Fragment(float4 position : SV_Position,
     float d = tex2D(_DepthTexture, texCoord).x;
 
     // Inverse projection
-    float3 p = DistanceToWorldPosition(texCoord, d);
+    float3 p = DistanceToWorldPosition(texCoord, d, _RayParams, _InverseView);
 
     // Coloring
     c.rgb = lerp(c.rgb, float3(1, 1, 1), Gridline(p * 10));
