@@ -80,6 +80,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "jp.keijiro.avfi": {
+      "version": "1.0.3",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
     "jp.keijiro.bibcam": {
       "version": "file:jp.keijiro.bibcam",
       "depth": 0,

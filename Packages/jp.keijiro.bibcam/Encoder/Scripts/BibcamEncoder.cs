@@ -39,7 +39,7 @@ public sealed class BibcamEncoder : MonoBehaviour
     void Start()
     {
         _material = new Material(_shader);
-        _encoded = new RenderTexture(Screen.width, Screen.height, 0);
+        _encoded = new RenderTexture(1920, 1080, 0);
     }
 
     void OnDestroy()
