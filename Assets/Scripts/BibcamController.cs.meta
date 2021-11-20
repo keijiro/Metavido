@@ -3,7 +3,14 @@ guid: 7a2cca50558814a8292a3b2c1b18c6b4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _encoder: {instanceID: 0}
+  - _camera: {instanceID: 0}
+  - _mainView: {instanceID: 0}
+  - _depthSlider: {instanceID: 0}
+  - _depthLabel: {instanceID: 0}
+  - _recordLabel: {instanceID: 0}
+  - _monitorShader: {fileID: 4800000, guid: 019687af59a744b6d80040aaf41b735f, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

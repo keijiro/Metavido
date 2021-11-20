@@ -16,9 +16,18 @@ sealed class BibcamController : MonoBehaviour
 
     #endregion
 
+    #region Hidden asset reference
+
+    [SerializeField, HideInInspector] Shader _monitorShader = null;
+
+    #endregion
+
     #region Private members
 
     VideoRecorder Recorder => GetComponent<VideoRecorder>();
+
+    RenderTexture _monitorTexture;
+    Material _monitorMaterial;
 
     #endregion
 
@@ -58,9 +67,19 @@ sealed class BibcamController : MonoBehaviour
         // Recorder setup
         Recorder.source = (RenderTexture)_encoder.EncodedTexture;
 
+        // Monitor setup
+        _monitorTexture = new RenderTexture(1920, 1080, 0);
+        _monitorMaterial = new Material(_monitorShader);
+
         // UI setup
-        _mainView.texture = _encoder.EncodedTexture;
+        _mainView.texture = _monitorTexture;
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
+    }
+
+    void OnDestroy()
+    {
+        Destroy(_monitorTexture);
+        Destroy(_monitorMaterial);
     }
 
     void Update()
@@ -69,6 +88,10 @@ sealed class BibcamController : MonoBehaviour
         var maxDepth = _depthSlider.value;
         var minDepth = maxDepth / 20;
         (_encoder.minDepth, _encoder.maxDepth) = (minDepth, maxDepth);
+
+        // Monitor update
+        Graphics.Blit
+          (_encoder.EncodedTexture, _monitorTexture, _monitorMaterial);
 
         // UI update
         _depthLabel.text = $"Depth Range: {minDepth:0.00} - {maxDepth:0.00}";
