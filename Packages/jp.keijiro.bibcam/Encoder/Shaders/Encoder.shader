@@ -2,7 +2,6 @@ Shader "Hidden/Bibcam/Encoder"
 {
     Properties
     {
-        _MainTex("", 2D) = "black" {}
         _textureY("", 2D) = "black" {}
         _textureCbCr("", 2D) = "black" {}
         _HumanStencil("", 2D) = "black" {}

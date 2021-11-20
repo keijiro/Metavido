@@ -23,8 +23,11 @@ public static class BibcamRenderUtils
     public static Matrix4x4 InverseView(Vector3 position, Quaternion rotation)
       => Matrix4x4.TRS(position, rotation, Vector3.one);
 
+    public static Matrix4x4 InverseView(Transform transform)
+      => InverseView(transform.position, transform.rotation);
+
     public static Matrix4x4 InverseView(Camera camera)
-      => InverseView(camera.transform.position, camera.transform.rotation);
+      => InverseView(camera.transform);
 
     public static Matrix4x4 InverseView(in Metadata meta)
       => InverseView(meta.CameraPosition, meta.CameraRotation);
