@@ -1,4 +1,5 @@
 using UnityEngine;
+using Bibcam.Common;
 
 namespace Bibcam.Decoder {
 

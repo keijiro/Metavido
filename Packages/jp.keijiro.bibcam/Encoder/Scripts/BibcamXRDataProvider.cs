@@ -1,4 +1,6 @@
 using UnityEngine;
+using Bibcam.Common;
+
 #if BIBCAM_HAS_ARFOUNDATION
 using UnityEngine.XR.ARFoundation;
 #endif
