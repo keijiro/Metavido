@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Bibcam.Decoder;
 using Bibcam.Encoder;
 using Avfi;
 
@@ -7,27 +8,22 @@ sealed class BibcamController : MonoBehaviour
 {
     #region Scene object references
 
+    [Space]
     [SerializeField] BibcamEncoder _encoder = null;
     [SerializeField] Camera _camera = null;
-    [SerializeField] RawImage _mainView = null;
+    [Space]
+    [SerializeField] BibcamMetadataDecoder _decoder = null;
+    [SerializeField] BibcamTextureDemuxer _demuxer = null;
+    [Space]
     [SerializeField] Slider _depthSlider = null;
     [SerializeField] Text _depthLabel = null;
     [SerializeField] Text _recordLabel = null;
 
     #endregion
 
-    #region Hidden asset reference
-
-    [SerializeField, HideInInspector] Shader _monitorShader = null;
-
-    #endregion
-
     #region Private members
 
     VideoRecorder Recorder => GetComponent<VideoRecorder>();
-
-    RenderTexture _monitorTexture;
-    Material _monitorMaterial;
 
     #endregion
 
@@ -67,19 +63,8 @@ sealed class BibcamController : MonoBehaviour
         // Recorder setup
         Recorder.source = (RenderTexture)_encoder.EncodedTexture;
 
-        // Monitor setup
-        _monitorTexture = new RenderTexture(1920, 1080, 0);
-        _monitorMaterial = new Material(_monitorShader);
-
         // UI setup
-        _mainView.texture = _monitorTexture;
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
-    }
-
-    void OnDestroy()
-    {
-        Destroy(_monitorTexture);
-        Destroy(_monitorMaterial);
     }
 
     void Update()
@@ -90,8 +75,8 @@ sealed class BibcamController : MonoBehaviour
         (_encoder.minDepth, _encoder.maxDepth) = (minDepth, maxDepth);
 
         // Monitor update
-        Graphics.Blit
-          (_encoder.EncodedTexture, _monitorTexture, _monitorMaterial);
+        _decoder.Decode(_encoder.EncodedTexture);
+        _demuxer.Demux(_encoder.EncodedTexture, _decoder.Metadata);
 
         // UI update
         _depthLabel.text = $"Depth Range: {minDepth:0.00} - {maxDepth:0.00}";

@@ -23,7 +23,15 @@ void Vertex(uint vid : SV_VertexID,
 {
     float u = vid & 1;
     float v = vid < 2 || vid == 5;
-    outPosition = float4(u, v, 1, 1) * 2 - 1;
+
+    float x = u * 2 - 1;
+    float y = v * 2 - 1;
+
+    // Aspect ratio fix to 16:9
+    float gap = _ScreenParams.x * 9 / (_ScreenParams.y * 16);
+    if (gap < 1) y *= gap; else x /= gap;
+
+    outPosition = float4(x, y, 1, 1);
     outTexCoord = float2(u, v);
 }
 
