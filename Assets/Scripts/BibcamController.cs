@@ -79,7 +79,7 @@ sealed class BibcamController : MonoBehaviour
         _demuxer.Demux(_encoder.EncodedTexture, _decoder.Metadata);
 
         // UI update
-        _depthLabel.text = $"Depth Range: {minDepth:0.00} - {maxDepth:0.00}";
+        _depthLabel.text = $"Depth Range: {minDepth:0.0}m - {maxDepth:0.0}m";
         PlayerPrefs.SetFloat("DepthSlider", maxDepth);
     }
 

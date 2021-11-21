@@ -358,13 +358,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _encoder: {fileID: 476498932}
   _camera: {fileID: 668977012}
-  _mainView: {fileID: 0}
+  _decoder: {fileID: 565425548}
+  _demuxer: {fileID: 565425547}
   _depthSlider: {fileID: 142055831}
   _depthLabel: {fileID: 1358872242}
   _recordLabel: {fileID: 267278086}
-  _decoder: {fileID: 565425548}
-  _demuxer: {fileID: 565425547}
-  _monitorShader: {fileID: 4800000, guid: 019687af59a744b6d80040aaf41b735f, type: 3}
 --- !u!114 &476498934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,7 +1068,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbdafefe6557a4f0c8c063f5e07e0c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _decoder: {fileID: 565425548}
   _demux: {fileID: 565425547}
+  _depthColor: {r: 1, g: 0.8666667, b: 0.6, a: 0.59607846}
+  _stencilColor: {r: 0.2980392, g: 1, b: 0.76601315, a: 0.8}
   _shader: {fileID: 4800000, guid: b9eb90f7526a94194b73cae0832d7587, type: 3}
 --- !u!114 &1355846242
 MonoBehaviour:
