@@ -71,7 +71,7 @@ sealed class BibcamController : MonoBehaviour
     {
         // Depth range settings update
         var maxDepth = _depthSlider.value;
-        var minDepth = maxDepth / 20;
+        var minDepth = maxDepth / 50;
         (_encoder.minDepth, _encoder.maxDepth) = (minDepth, maxDepth);
 
         // Monitor update

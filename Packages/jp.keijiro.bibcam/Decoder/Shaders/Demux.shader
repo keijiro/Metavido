@@ -37,7 +37,7 @@ float4 FragmentDepth(float4 position : SV_Position,
     #ifndef UNITY_NO_LINEAR_COLORSPACE
     rgb = LinearToGammaSpace(rgb);
     #endif
-    return lerp(_DepthRange.x, _DepthRange.y, RGB2Hue(rgb));
+    return DecodeDepth(rgb, _DepthRange);
 }
 
     ENDCG

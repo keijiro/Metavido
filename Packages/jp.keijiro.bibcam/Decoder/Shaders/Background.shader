@@ -47,8 +47,8 @@ void Fragment(float4 position : SV_Position,
       (texCoord, depth, _RayParams, _InverseView);
 
     // Depth range mask
-    float d_near = 1 - smoothstep(0.1, 0.2, depth - _DepthRange.x);
-    float d_far = smoothstep(-0.2, -0.1, depth - _DepthRange.y);
+    float d_near = 1 - smoothstep(0.0, 0.1, depth - _DepthRange.x);
+    float d_far = smoothstep(-0.1, 0, depth - _DepthRange.y);
     float d_safe = 1 - max(d_near, d_far);
 
     // Zebra pattern

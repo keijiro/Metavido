@@ -29,13 +29,6 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
     return float3(r, g, b);
 }
 
-// Depth hue-encoding
-float3 EncodeDepth(float depth, float2 range, float margin)
-{
-    depth = (depth - range.x) / (range.y - range.x);
-    return Hue2RGB(clamp(depth, margin, 1 - margin));
-}
-
 // Metadata encoding
 bool EncodeMetadata(in float4x4 data, float2 uv)
 {
@@ -43,6 +36,36 @@ bool EncodeMetadata(in float4x4 data, float2 uv)
     uint bit = p.y & 31;
     uint dw = asuint(data[p.y / 32][p.x]);
     return (dw >> bit) & 1;
+}
+
+//
+// Depth hue encoding
+//
+
+static const float DepthHueMargin = 0.01;
+static const float DepthHuePadding = 0.01;
+
+float3 EncodeDepth(float depth, float2 range)
+{
+    // Depth range
+    depth = (depth - range.x) / (range.y - range.x);
+    // Padding
+    depth = depth * (1 - DepthHuePadding * 2) + DepthHuePadding;
+    // Margin
+    depth = saturate(depth) * (1 - DepthHueMargin * 2) + DepthHueMargin;
+    // Hue encoding
+    return Hue2RGB(depth);
+}
+
+float DecodeDepth(float3 rgb, float2 range)
+{
+    // Hue decoding
+    float depth = RGB2Hue(rgb);
+    // Padding/margin
+    const float ext = DepthHueMargin + DepthHuePadding;
+    depth = depth * (1 + ext * 2) - ext;
+    // Depth range
+    return lerp(range.x, range.y, depth);
 }
 
 //
