@@ -1,3 +1,6 @@
+// Bibcam format configuration
+static const uint2 BibcamFrameSize = uint2(1920, 1080);
+
 // Hue encoding
 float3 Hue2RGB(float hue)
 {
@@ -32,10 +35,10 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
 // Metadata encoding
 bool EncodeMetadata(in float4x4 data, float2 uv)
 {
-    uint2 p = (uint2)(uv * float2(4, 128));
-    uint bit = p.y & 31;
-    uint dw = asuint(data[p.y / 32][p.x]);
-    return (dw >> bit) & 1;
+    uint2 p = uv * BibcamFrameSize + 0.5 / BibcamFrameSize;
+    uint dw = asint(data[(p.x / 8) & 3][p.x / (8 * 4)]);
+    bool mask = (p.y < 8 * 32) && (p.x < 8 * 16);
+    return (dw >> (p.y / 8)) & mask;
 }
 
 //
@@ -71,78 +74,50 @@ float DecodeDepth(float3 rgb, float2 range)
 //
 // UV coordinate remapping functions
 //
-// +---+---+-+  S: Human stencil
-// | S |   | |  Z: Hue-encoded depth
-// +---+ C |M|  C: Color
-// | Z |   | |  M: Metadata
-// +---+---+-+
+// +-----+-----+  C: Color
+// |  Z  |     |  Z: Hue-encoded depth
+// +-----+  C  |  S: Human stencil
+// | S/M |     |  M: Metadata
+// +-----+-----+
 //
 
-static const float MetadataWidth = 0.02;
-
-float2 UV_FullToMeta(float2 uv)
+float2 UV_FullToStencil(float2 uv)
 {
-    uv.x = (uv.x - 1 + MetadataWidth) / MetadataWidth;
-    return uv;
+    return uv * 2;
 }
 
-float2 UV_FullToCZS(float2 uv)
+float2 UV_FullToDepth(float2 uv)
 {
-    uv.x /= 1 - MetadataWidth;
+    uv *= 2;
+    uv.y -= 1;
     return uv;
 }
 
 float2 UV_FullToColor(float2 uv)
 {
-    uv = UV_FullToCZS(uv);
     uv.x = uv.x * 2 - 1;
     return uv;
 }
 
-float2 UV_FullToDepth(float2 uv)
+float2 UV_StencilToFull(float2 uv)
 {
-    return UV_FullToCZS(uv) * 2;
+    return uv * 0.5;
 }
 
-float2 UV_FullToStencil(float2 uv)
+float2 UV_DepthToFull(float2 uv)
 {
-    uv = UV_FullToCZS(uv) * 2;
-    uv.y -= 1;
-    return uv;
-}
-
-float2 UV_MetaToFull(float2 uv)
-{
-    uv.x = lerp(1 - MetadataWidth, 1, uv.x);
-    return uv;
-}
-
-float2 UV_CZSToFull(float2 uv)
-{
-    uv.x *= 1 - MetadataWidth;
-    return uv;
+    return uv * 0.5 + float2(0, 0.5);
 }
 
 float2 UV_ColorToFull(float2 uv)
 {
     uv.x = lerp(0.5, 1, uv.x);
-    return UV_CZSToFull(uv);
-}
-
-float2 UV_StencilToFull(float2 uv)
-{
-    return UV_CZSToFull(uv * 0.5 + float2(0, 0.5));
-}
-
-float2 UV_DepthToFull(float2 uv)
-{
-    return UV_CZSToFull(uv * 0.5);
+    return uv;
 }
 
 // Multiplexer
 
-float3 BibcamMux(float2 uv, float3 m, float3 c, float3 z, float3 s)
+float3 BibcamMux(float2 uv, float m, float3 c, float3 z, float s)
 {
-    return uv.x > 1 - MetadataWidth ? m :
-             (uv.x > (1 - MetadataWidth) / 2 ? c : (uv.y > 0.5 ? s : z));
+    return uv.x > 0.5 ? c : (uv.y > 0.5 ? z : float3(s, 0, m));
 }

@@ -48,7 +48,7 @@ float4 Fragment(float4 position : SV_Position,
                 float2 texCoord : TEXCOORD) : SV_Target
 {
     // Metadata
-    float m = EncodeMetadata(_Metadata, UV_FullToMeta(texCoord));
+    float m = EncodeMetadata(_Metadata, texCoord);
 
     // Color
     float2 uv_c = UVFix(UV_FullToColor(texCoord));
