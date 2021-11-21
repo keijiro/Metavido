@@ -36,7 +36,7 @@ sealed class BibcamController : MonoBehaviour
             // Stop recording
             Recorder.EndRecording();
             _recordLabel.text = "Record";
-            _recordLabel.color = Color.black;
+            _recordLabel.color = Color.white;
         }
         else
         {
