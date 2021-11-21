@@ -225,7 +225,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbdafefe6557a4f0c8c063f5e07e0c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _decoder: {fileID: 1618752109}
   _demux: {fileID: 1618752108}
+  _depthColor: {r: 1, g: 0.8666667, b: 0.6, a: 0.59607846}
+  _stencilColor: {r: 0.2980392, g: 1, b: 0.76601315, a: 0.8}
   _shader: {fileID: 4800000, guid: b9eb90f7526a94194b73cae0832d7587, type: 3}
 --- !u!1 &1618752105
 GameObject:

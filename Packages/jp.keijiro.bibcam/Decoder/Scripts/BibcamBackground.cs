@@ -8,7 +8,15 @@ public sealed class BibcamBackground : MonoBehaviour
 {
     #region Scene object references
 
+    [SerializeField] BibcamMetadataDecoder _decoder = null;
     [SerializeField] BibcamTextureDemuxer _demux = null;
+
+    #endregion
+
+    #region Editable attributes
+
+    [SerializeField] Color _depthColor = Color.white;
+    [SerializeField] Color _stencilColor = Color.red;
 
     #endregion
 
@@ -35,21 +43,24 @@ public sealed class BibcamBackground : MonoBehaviour
     void OnRenderObject()
     {
         // Run it only on the target camera.
-        var camera = GetComponent<Camera>();
-        if (camera != Camera.current) return;
+        if (GetComponent<Camera>() != Camera.current) return;
 
         // Run it only when the textures are ready.
         if (_demux.ColorTexture == null) return;
 
         // Camera parameters
-        var ray = BibcamRenderUtils.RayParams(camera);
-        var iview = BibcamRenderUtils.InverseView(camera);
+        var meta = _decoder.Metadata;
+        var ray = BibcamRenderUtils.RayParams(meta);
+        var iview = BibcamRenderUtils.InverseView(meta);
 
         // Material property update
         _material.SetVector(ShaderID.RayParams, ray);
         _material.SetMatrix(ShaderID.InverseView, iview);
+        _material.SetVector(ShaderID.DepthRange, meta.DepthRange);
         _material.SetTexture(ShaderID.ColorTexture, _demux.ColorTexture);
         _material.SetTexture(ShaderID.DepthTexture, _demux.DepthTexture);
+        _material.SetColor(ShaderID.DepthColor, _depthColor);
+        _material.SetColor(ShaderID.StencilColor, _stencilColor);
 
         // Fullscreen quad drawcall
         _material.SetPass(0);

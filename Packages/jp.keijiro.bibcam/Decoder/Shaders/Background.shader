@@ -6,16 +6,14 @@ Shader "Hidden/Bibcam/Background"
 
 sampler2D _ColorTexture;
 sampler2D _DepthTexture;
+
 float4 _RayParams;
 float4x4 _InverseView;
+float2 _DepthRange;
 float _DepthOffset;
 
-// 3-axis Gridline
-float Gridline(float3 p)
-{
-    float3 b = 1 - saturate(0.5 * min(frac(1 - p), frac(p)) / fwidth(p));
-    return max(max(b.x, b.y), b.z);
-}
+float4 _DepthColor;
+float4 _StencilColor;
 
 void Vertex(uint vid : SV_VertexID,
             out float4 outPosition : SV_Position,
@@ -41,19 +39,44 @@ void Fragment(float4 position : SV_Position,
               out float outDepth : SV_Depth)
 {
     // Color/depth samples
-    float4 c = tex2D(_ColorTexture, texCoord);
-    float d = tex2D(_DepthTexture, texCoord).x;
+    float4 color = tex2D(_ColorTexture, texCoord);
+    float depth = tex2D(_DepthTexture, texCoord).x;
 
-    // Inverse projection
-    float3 p = DistanceToWorldPosition(texCoord, d, _RayParams, _InverseView);
+    // World space position
+    float3 wpos = DistanceToWorldPosition
+      (texCoord, depth, _RayParams, _InverseView);
 
-    // Coloring
-    c.rgb = lerp(c.rgb, float3(1, 1, 1), Gridline(p * 10));
-    c.rgb = lerp(c.rgb, float3(1, 0, 1), c.a * 0.5);
+    // Depth range mask
+    float d_near = 1 - smoothstep(0.1, 0.2, depth - _DepthRange.x);
+    float d_far = smoothstep(-0.2, -0.1, depth - _DepthRange.y);
+    float d_safe = 1 - max(d_near, d_far);
+
+    // Zebra pattern
+    float zebra = frac(dot(texCoord, 20)) < 0.25;
+
+    // 3-axis grid lines
+    float3 wpc = wpos * 5;
+    wpc = min(frac(1 - wpc), frac(wpc)) / fwidth(wpc);
+    wpc = 1 - saturate(wpc * 0.5);
+    float grid = max(max(wpc.x, wpc.y), wpc.z);
+
+    // Depth overlay
+    float d_ovr = d_safe * grid;
+    d_ovr = max(d_ovr, d_near * zebra);
+    d_ovr = max(d_ovr, d_far * zebra);
+
+    // Stencil edge lines
+    float s_edge = color.a * 2 - 1;
+    s_edge = saturate(1 - 0.2 * abs(s_edge / fwidth(s_edge)));
+
+    // Blending
+    float3 rgb = color.rgb;
+    rgb = lerp(rgb, _DepthColor.rgb, _DepthColor.a * d_ovr);
+    rgb = lerp(rgb, _StencilColor.rgb, _StencilColor.a * s_edge);
 
     // Output
-    outColor = c;
-    outDepth = DistanceToDepth(d) + _DepthOffset;
+    outColor = float4(rgb, 1);
+    outDepth = DistanceToDepth(depth) + _DepthOffset;
 }
 
     ENDCG
