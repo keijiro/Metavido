@@ -65,7 +65,9 @@ public sealed class BibcamEncoder : MonoBehaviour
 
         // Projection matrix
         var proj = _xrSource.ProjectionMatrix;
-        proj[1, 1] /= aspectFix;
+
+        // Y-factor overriding (16:9)
+        proj[1, 1] = proj[0, 0] * 16 / 9;
 
         // Depth range
         var range = new Vector2(_minDepth, _maxDepth);
