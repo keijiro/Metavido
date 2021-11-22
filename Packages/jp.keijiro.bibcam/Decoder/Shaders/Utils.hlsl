@@ -4,8 +4,7 @@
 // Linear distance to Z depth
 float DistanceToDepth(float d)
 {
-    return d < _ProjectionParams.y ? 0 :
-      (0.5 / _ZBufferParams.z * (1 / d - _ZBufferParams.w));
+    return (1 / d - _ZBufferParams.w) / _ZBufferParams.z;
 }
 
 // Inversion projection into the world space

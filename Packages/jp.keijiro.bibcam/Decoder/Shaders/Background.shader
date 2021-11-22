@@ -76,7 +76,7 @@ void Fragment(float4 position : SV_Position,
 
     // Output
     outColor = float4(rgb, 1);
-    outDepth = DistanceToDepth(depth) + _DepthOffset;
+    outDepth = DistanceToDepth(depth + _DepthOffset);
 }
 
     ENDCG
