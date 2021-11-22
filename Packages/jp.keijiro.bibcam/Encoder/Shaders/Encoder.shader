@@ -23,8 +23,16 @@ sampler2D _EnvironmentDepth;
 float2 _DepthRange;
 float _AspectFix;
 
-// Metadata as matrix
-float4x4 _Metadata;
+// Metadata
+StructuredBuffer<float> _Metadata;
+
+bool EncodeMetadata(float2 uv)
+{
+    uint2 tc = uv * BibcamFrameSize + 0.5 / BibcamFrameSize;
+    tc /= 8;
+    bool bit = (asint(_Metadata[min(tc.x, 12)]) >> tc.y) & 1;
+    return bit && (tc.x < 12) && (tc.y < 32);
+}
 
 // Aspect ratio compensation & vertical flip
 float2 UVFix(float2 uv)
@@ -48,7 +56,7 @@ float4 Fragment(float4 position : SV_Position,
                 float2 texCoord : TEXCOORD) : SV_Target
 {
     // Metadata
-    float m = EncodeMetadata(_Metadata, texCoord);
+    float m = EncodeMetadata(texCoord);
 
     // Color
     float2 uv_c = UVFix(UV_FullToColor(texCoord));

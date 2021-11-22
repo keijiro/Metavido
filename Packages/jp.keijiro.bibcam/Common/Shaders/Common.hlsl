@@ -32,15 +32,6 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
     return float3(r, g, b);
 }
 
-// Metadata encoding
-bool EncodeMetadata(in float4x4 data, float2 uv)
-{
-    uint2 p = uv * BibcamFrameSize + 0.5 / BibcamFrameSize;
-    uint dw = asint(data[(p.x / 8) & 3][p.x / (8 * 4)]);
-    bool mask = (p.y < 8 * 32) && (p.x < 8 * 16);
-    return (dw >> (p.y / 8)) & mask;
-}
-
 //
 // Depth hue encoding
 //

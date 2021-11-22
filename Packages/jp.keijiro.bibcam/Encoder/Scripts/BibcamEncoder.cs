@@ -31,6 +31,8 @@ public sealed class BibcamEncoder : MonoBehaviour
 
     Material _material;
     RenderTexture _encoded;
+    GraphicsBuffer _metadata;
+    Metadata[] _tempArray = new Metadata[1];
 
     #endregion
 
@@ -39,13 +41,15 @@ public sealed class BibcamEncoder : MonoBehaviour
     void Start()
     {
         _material = new Material(_shader);
-        _encoded = new RenderTexture(1920, 1080, 0);
+        _encoded = GfxUtil.RGBARenderTexture(1920, 1080);
+        _metadata = GfxUtil.StructuredBuffer(12, sizeof(float));
     }
 
     void OnDestroy()
     {
         Destroy(_material);
         Destroy(_encoded);
+        _metadata.Dispose();
     }
 
     void LateUpdate()
@@ -65,17 +69,16 @@ public sealed class BibcamEncoder : MonoBehaviour
 
         // Projection matrix
         var proj = _xrSource.ProjectionMatrix;
-
-        // Y-factor overriding (16:9)
-        proj[1, 1] = proj[0, 0] * 16 / 9;
+        proj[1, 1] = proj[0, 0] * 16 / 9; // Y-factor overriding (16:9)
 
         // Depth range
         var range = new Vector2(_minDepth, _maxDepth);
         _material.SetVector(ShaderID.DepthRange, range);
 
         // Metadata
-        var meta = new Metadata(_xrSource.CameraTransform, proj, range);
-        _material.SetMatrix(ShaderID.Metadata, meta.AsMatrix);
+        _tempArray[0] = new Metadata(_xrSource.CameraTransform, proj, range);
+        _metadata.SetData(_tempArray);
+        _material.SetBuffer(ShaderID.Metadata, _metadata);
 
         // Encoding and multiplexing
         Graphics.Blit(null, _encoded, _material);

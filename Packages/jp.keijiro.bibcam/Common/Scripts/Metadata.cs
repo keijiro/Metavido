@@ -2,125 +2,110 @@ using UnityEngine;
 
 namespace Bibcam.Common {
 
-//
 // Burnt-in metadata
-//
-// Burnt-in data area has 4x4 float capacity, so we use Matrix4x4 as a storage.
-//
 public readonly struct Metadata
 {
     #region Private data
 
-    readonly Matrix4x4 _data;
+    readonly float _px;
+    readonly float _py;
+    readonly float _pz;
+
+    readonly float _rx;
+    readonly float _ry;
+    readonly float _rz;
+
+    readonly float _sx;
+    readonly float _sy;
+    readonly float _fov;
+
+    readonly float _near;
+    readonly float _far;
+    readonly float _hash;
 
     #endregion
 
     #region Public accessors
 
-    public Matrix4x4 AsMatrix
-      => _data;
-
     public bool IsValid
-      => _data.m21 != 0;
+      => _fov != 0;
 
     public Vector3 CameraPosition
-      => new Vector3(_data.m00, _data.m10, _data.m20);
+      => new Vector3(_px, _py, _pz);
 
     public Quaternion CameraRotation
-      => ReconstructRotation(_data.m30, _data.m01, _data.m11);
+      => new Quaternion(_rx, _ry, _rz, RW);
 
-    public Matrix4x4 ProjectionMatrix
-      => ReconstructProjectionMatrix(_data);
+    public Vector2 CenterShift
+      => new Vector2(_sx, _sy);
 
-    public float MinDepth
-      => _data.m03;
-
-    public float MaxDepth
-      => _data.m13;
+    public float FieldOfView
+      => _fov;
 
     public Vector2 DepthRange
-      => new Vector2(_data.m03, _data.m13);
+      => new Vector2(_near, _far);
 
     #endregion
 
     #region Public constructors
 
-    public Metadata(in Matrix4x4 source)
-      => _data = source;
+    public Metadata(Transform camera, in Matrix4x4 projection, Vector2 range)
+    {
+        var p = camera.position;
+        var r = camera.rotation;
+        var rsign = r.w < 0 ? -1.0f : 1.0f;
 
-    public Metadata(Transform camera, in Matrix4x4 projection,
-                    float minDepth, float maxDepth)
-      => _data = PackData(camera.position, camera.rotation.normalized,
-                          projection, minDepth, maxDepth);
+        _px = p.x;
+        _py = p.y;
+        _pz = p.z;
 
-    public Metadata(Transform camera, in Matrix4x4 projection,
-                    Vector2 depthRange)
-      => _data = PackData(camera.position, camera.rotation.normalized,
-                          projection, depthRange.x, depthRange.y);
+        _rx = r.x * rsign;
+        _ry = r.y * rsign;
+        _rz = r.z * rsign;
+
+        _sx = projection.m02;
+        _sy = projection.m12;
+        _fov = Mathf.Atan(1 / projection.m11) * 2;
+
+        _near = range.x;
+        _far  = range.y;
+        _hash = Random.value;
+    }
 
     #endregion
 
-    #region Private helper functions
+    #region Projection matrix reconstruction
 
-    static Quaternion ReconstructRotation(float x, float y, float z)
-      => new Quaternion(x, y, z, Mathf.Sqrt(1 - x * x - y * y - z * z));
-
-    static Matrix4x4 ReconstructProjectionMatrix(in Matrix4x4 data)
+    public Matrix4x4 ReconstructProjectionMatrix(in Matrix4x4 source)
     {
-        var m = default(Matrix4x4);
+        var m = source;
+        var aspect = source.m11 / source.m00;
 
-        m.m00 = data.m21;
-        m.m10 = 0;
-        m.m20 = 0;
-        m.m30 = 0;
+        if (aspect > 16.0f / 9)
+        {
+            // Wider than 16:9; Adjust the horizontal FoV.
+            m.m11 = 1 / Mathf.Tan(_fov / 2);
+            m.m00 = m.m11 / aspect;
+        }
+        else
+        {
+            // Narrower than 16:9; Adjust the vertical FoV.
+            m.m00 = 9.0f / 16 / Mathf.Tan(_fov / 2);
+            m.m11 = m.m00 * aspect;
+        }
 
-        m.m01 = 0;
-        m.m11 = data.m02;
-        m.m21 = 0;
-        m.m31 = 0;
-
-        m.m02 = data.m31;
-        m.m12 = data.m12;
-        m.m22 = data.m22;
-        m.m32 = -1;
-
-        m.m03 = 0;
-        m.m13 = 0;
-        m.m23 = data.m32;
-        m.m33 = 0;
+        m.m02 = _sx;
+        m.m12 = _sy;
 
         return m;
     }
 
-    static Matrix4x4 PackData(in Vector3 position, in Quaternion rotation,
-                              in Matrix4x4 projection,
-                              float minDepth, float maxDepth)
-    {
-        var rsign = rotation.w < 0 ? -1.0f : 1.0f;
-        var m = new Matrix4x4();
+    #endregion
 
-        m.m00 = position.x;
-        m.m10 = position.y;
-        m.m20 = position.z;
-        m.m30 = rotation.x * rsign;
+    #region Private helpers
 
-        m.m01 = rotation.y * rsign;
-        m.m11 = rotation.z * rsign;
-        m.m21 = projection.m00;
-        m.m31 = projection.m02;
-
-        m.m02 = projection.m11;
-        m.m12 = projection.m12;
-        m.m22 = projection.m22;
-        m.m32 = projection.m23;
-
-        m.m03 = minDepth;
-        m.m13 = maxDepth;
-        m.m23 = Random.value;
-        m.m33 = Random.value;
-
-        return m;
-    }
+    float RW
+      => Mathf.Sqrt(1 - _rx * _rx - _ry * _ry - _rz * _rz);
 
     #endregion
 }

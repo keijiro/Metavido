@@ -13,7 +13,7 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     #region Public members
 
-    public Metadata Metadata { get; private set; }
+    public Metadata Metadata => _readbackArray[0];
 
     public void Decode(Texture source)
     {
@@ -24,7 +24,6 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
         // Synchronized readback (slow!)
         _readbackBuffer.GetData(_readbackArray);
-        Metadata = new Metadata(_readbackArray[0]);
     }
 
     #endregion
@@ -32,14 +31,14 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
     #region Private members
 
     GraphicsBuffer _readbackBuffer;
-    Matrix4x4[] _readbackArray = new Matrix4x4[1];
+    Metadata[] _readbackArray = new Metadata[1];
 
     #endregion
 
     #region MonoBehaviour implementation
 
     void Start()
-      => _readbackBuffer = GfxUtil.StructuredBuffer(16, sizeof(float));
+      => _readbackBuffer = GfxUtil.StructuredBuffer(12, sizeof(float));
 
     void OnDestroy()
       => _readbackBuffer.Dispose();
