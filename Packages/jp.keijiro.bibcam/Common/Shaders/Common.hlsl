@@ -65,8 +65,8 @@ float DecodeDepth(float3 rgb, float2 range)
     // Hue decoding
     float depth = RGB2Hue(rgb);
     // Padding/margin
-    const float ext = DepthHueMargin + DepthHuePadding;
-    depth = depth * (1 + ext * 2) - ext;
+    depth = (depth - DepthHueMargin ) / (1 - DepthHueMargin  * 2);
+    depth = (depth - DepthHuePadding) / (1 - DepthHuePadding * 2);
     // Depth range
     return lerp(range.x, range.y, depth);
 }
