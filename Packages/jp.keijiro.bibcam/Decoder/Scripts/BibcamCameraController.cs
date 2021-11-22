@@ -20,19 +20,24 @@ public sealed class BibcamCameraController : MonoBehaviour
 
         var camera = GetComponent<Camera>();
 
-        // Projection matrix with aspect ratio conversion
-        var proj = meta.ProjectionMatrix;
-        if (camera.aspect < 16.0f / 9)
-            proj[1, 1] = proj[0, 0] * camera.aspect;
-        else
-            proj[0, 0] = proj[1, 1] / camera.aspect;
+        // Projection matrices
+        var cp = camera.projectionMatrix;   // from camera
+        var mp = meta.ProjectionMatrix;     // from metadata
 
-        // Transform update
+        // Aspect ratio conversion
+        if (camera.aspect < 16.0f / 9)
+            mp[1, 1] = mp[0, 0] * camera.aspect;
+        else
+            mp[0, 0] = mp[1, 1] / camera.aspect;
+
+        // Copy depth-dependent elements from the camera.
+        mp[2, 2] = cp[2, 2];
+        mp[2, 3] = cp[2, 3];
+
+        // Camera update
         transform.position = meta.CameraPosition;
         transform.rotation = meta.CameraRotation;
-
-        // Camera parameter update
-        camera.projectionMatrix = proj;
+        camera.projectionMatrix = mp;
     }
 
     #endregion
