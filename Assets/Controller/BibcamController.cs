@@ -25,6 +25,8 @@ sealed class BibcamController : MonoBehaviour
 
     VideoRecorder Recorder => GetComponent<VideoRecorder>();
 
+    RenderTexture _delay;
+
     #endregion
 
     #region Public members (exposed for UI)
@@ -63,9 +65,15 @@ sealed class BibcamController : MonoBehaviour
         // Recorder setup
         Recorder.source = (RenderTexture)_encoder.EncodedTexture;
 
+        // Delay buffer
+        _delay = new RenderTexture(1920, 1080, 0);
+
         // UI setup
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
     }
+
+    void OnDestroy()
+      => Destroy(_delay);
 
     void Update()
     {
@@ -76,7 +84,8 @@ sealed class BibcamController : MonoBehaviour
 
         // Monitor update
         _decoder.Decode(_encoder.EncodedTexture);
-        _demuxer.Demux(_encoder.EncodedTexture, _decoder.Metadata);
+        _demuxer.Demux(_delay, _decoder.Metadata);
+        Graphics.Blit(_encoder.EncodedTexture, _delay);
 
         // UI update
         _depthLabel.text = $"Depth Range: {minDepth:0.0}m - {maxDepth:0.0}m";

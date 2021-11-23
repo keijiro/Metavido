@@ -16,14 +16,27 @@ sealed class BibcamVideoFeeder : MonoBehaviour
 
     #endregion
 
+    #region Private objects
+
+    RenderTexture _delay;
+
+    #endregion
+
     #region MonoBehaviour implementation
+
+    void Start()
+      => _delay = new RenderTexture(1920, 1080, 0);
+
+    void OnDestroy()
+      => Destroy(_delay);
 
     void Update()
     {
         var video = GetComponent<VideoPlayer>();
         if (video.texture == null) return;
         _decoder.Decode(video.texture);
-        _demuxer.Demux(video.texture, _decoder.Metadata);
+        _demuxer.Demux(_delay, _decoder.Metadata);
+        Graphics.Blit(video.texture, _delay);
     }
 
     #endregion
