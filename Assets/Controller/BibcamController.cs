@@ -18,6 +18,7 @@ sealed class BibcamController : MonoBehaviour
     [SerializeField] Slider _depthSlider = null;
     [SerializeField] Text _depthLabel = null;
     [SerializeField] Text _recordLabel = null;
+    [SerializeField] GameObject _recordSign = null;
 
     #endregion
 
@@ -39,6 +40,7 @@ sealed class BibcamController : MonoBehaviour
             Recorder.EndRecording();
             _recordLabel.text = "Record";
             _recordLabel.color = Color.white;
+            _recordSign.SetActive(false);
         }
         else
         {
@@ -50,6 +52,7 @@ sealed class BibcamController : MonoBehaviour
             Recorder.StartRecording();
             _recordLabel.text = "Stop";
             _recordLabel.color = Color.red;
+            _recordSign.SetActive(true);
         }
     }
 
