@@ -29,9 +29,9 @@ Build and play the `Encoder` scene on a LiDAR enabled iOS device. You can
 record Bibcam video clips by just pressing the "Record" button. It stores
 recorded clips in the camera roll.
 
-Transfer a video clip to your computer. Copy it into the `StreamingAssets`
-directory, and rename it to `Test.mp4`. Then you can play it back in the
-`Decoder` scene.
+Transfer the video clips to your computer. Copy onw of them into the project
+directory (the directory where contains `Assets`, `Packages`, etc.), and rename
+it to `Test.mp4`. Then you can play it back in the `Decoder` scene.
 
 For more advanced usage, see the [BibcamVfx] repository.
 
