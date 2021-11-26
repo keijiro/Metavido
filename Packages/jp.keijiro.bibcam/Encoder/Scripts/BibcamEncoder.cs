@@ -43,6 +43,7 @@ public sealed class BibcamEncoder : MonoBehaviour
         _material = new Material(_shader);
         _encoded = GfxUtil.RGBARenderTexture(1920, 1080);
         _metadata = GfxUtil.StructuredBuffer(12, sizeof(float));
+        Application.onBeforeRender += OnBeforeApplicationRender;
     }
 
     void OnDestroy()
@@ -50,9 +51,27 @@ public sealed class BibcamEncoder : MonoBehaviour
         Destroy(_material);
         Destroy(_encoded);
         _metadata.Dispose();
+        Application.onBeforeRender -= OnBeforeApplicationRender;
     }
 
-    void LateUpdate()
+    #endregion
+
+    #region Application level callback
+
+    //
+    // ARPoseDriver updates the camera transform in Application.onBeforeRender,
+    // so we have to use it too.
+    //
+    // The current implementation is not perfect because it's not clear which
+    // one is called first. We know that ARPoseDriver uses OnEnable to register
+    // its event handler, so theirs might be called first...
+    //
+    // FIXME: To make the execution order clear, we should call ARPoseDriver.
+    // PerformUpdate (private) via C# reflection. That's stil a hackish way to
+    // solve the problem, though.
+    //
+
+    void OnBeforeApplicationRender()
     {
         var tex = _xrSource.TextureSet;
         if (tex.y == null) return;
