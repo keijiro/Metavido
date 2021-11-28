@@ -1,28 +1,6 @@
 // Bibcam format configuration
 static const uint2 BibcamFrameSize = uint2(1920, 1080);
 
-// Hue encoding
-float3 Hue2RGB(float hue)
-{
-    float h = hue * 6 - 2;
-    float r = abs(h - 1) - 1;
-    float g = 2 - abs(h);
-    float b = 2 - abs(h - 2);
-    return saturate(float3(r, g, b));
-}
-
-// Hue value calculation
-float RGB2Hue(float3 c)
-{
-    float minc = min(min(c.r, c.g), c.b);
-    float maxc = max(max(c.r, c.g), c.b);
-    float div = 1 / (6 * max(maxc - minc, 1e-5));
-    float r = (c.g - c.b) * div;
-    float g = 1.0 / 3 + (c.b - c.r) * div;
-    float b = 2.0 / 3 + (c.r - c.g) * div;
-    return frac(lerp(r, lerp(g, b, c.g < c.b), c.r < max(c.g, c.b)) + 1);
-}
-
 // yCbCr decoding
 float3 YCbCrToSRGB(float y, float2 cbcr)
 {
@@ -39,6 +17,15 @@ float3 YCbCrToSRGB(float y, float2 cbcr)
 static const float DepthHueMargin = 0.01;
 static const float DepthHuePadding = 0.01;
 
+float3 Hue2RGB(float hue)
+{
+    float h = hue * 6 - 2;
+    float r = abs(h - 1) - 1;
+    float g = 2 - abs(h);
+    float b = 2 - abs(h - 2);
+    return saturate(float3(r, g, b));
+}
+
 float3 EncodeDepth(float depth, float2 range)
 {
     // Depth range
@@ -49,6 +36,18 @@ float3 EncodeDepth(float depth, float2 range)
     depth = saturate(depth) * (1 - DepthHueMargin * 2) + DepthHueMargin;
     // Hue encoding
     return Hue2RGB(depth);
+}
+
+float RGB2Hue(float3 c)
+{
+    float minc = min(min(c.r, c.g), c.b);
+    float maxc = max(max(c.r, c.g), c.b);
+    float div = 1 / (6 * max(maxc - minc, 1e-5));
+    float r = (c.g - c.b) * div;
+    float g = 1.0 / 3 + (c.b - c.r) * div;
+    float b = 2.0 / 3 + (c.r - c.g) * div;
+    float d = lerp(r, lerp(g, b, c.g < c.b), c.r < max(c.g, c.b));
+    return frac(d + 1 - DepthHuePadding / 2) + DepthHuePadding / 2;
 }
 
 float DecodeDepth(float3 rgb, float2 range)
