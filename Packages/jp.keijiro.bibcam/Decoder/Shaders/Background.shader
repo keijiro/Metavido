@@ -30,7 +30,7 @@ void Vertex(uint vid : SV_VertexID,
     if (gap < 1) y *= gap; else x /= gap;
 
     outPosition = float4(x, y, 1, 1);
-    outTexCoord = float2(u, v);
+    outTexCoord = float2(u, _ProjectionParams.x < 0 ? 1 - v : v);
 }
 
 void Fragment(float4 position : SV_Position,
