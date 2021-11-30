@@ -41,11 +41,8 @@ public sealed class BibcamBackground : MonoBehaviour
     void OnDestroy()
       => Destroy(_material);
 
-    void OnRenderObject()
+    void LateUpdate()
     {
-        // Run it only on the target camera.
-        if (GetComponent<Camera>() != Camera.current) return;
-
         // Run it only when the textures are ready.
         if (_demux.ColorTexture == null) return;
 
@@ -63,6 +60,25 @@ public sealed class BibcamBackground : MonoBehaviour
         _material.SetColor(ShaderID.StencilColor, _stencilColor);
         _material.SetTexture(ShaderID.ColorTexture, _demux.ColorTexture);
         _material.SetTexture(ShaderID.DepthTexture, _demux.DepthTexture);
+    }
+
+    #endregion
+
+    #region Draw methods
+
+    // Public draw method for SRPs
+    public void PushDrawCommand(UnityEngine.Rendering.CommandBuffer cmd)
+      => cmd.DrawProcedural
+           (Matrix4x4.identity, _material, 0, MeshTopology.Triangles, 6);
+
+    // OnRenderObject implementation for the built-in render pipeline
+    void OnRenderObject()
+    {
+        // Test if it's the target camera. This always fails on SRPs.
+        if (GetComponent<Camera>() != Camera.current) return;
+
+        // Run it only when the textures are ready.
+        if (_demux.ColorTexture == null) return;
 
         // Fullscreen quad drawcall
         _material.SetPass(0);
