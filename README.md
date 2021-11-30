@@ -33,6 +33,13 @@ Transfer the video clips to your computer. Copy onw of them into the project
 directory (the directory where contains `Assets`, `Packages`, etc.), and rename
 it to `Test.mp4`. Then you can play it back in the `Decoder` scene.
 
-For more advanced usage, see the [BibcamVfx] repository.
+Related Repository
+------------------
+
+[BibcamVfx] shows more advanced usage with HDPR and VFX Graph.
+
+[BibcamUrp] provides a custom renderer feature that is needed to run the
+Bibcam background renderer on URP.
 
 [BibcamVfx]: https://github.com/keijiro/BibcamVfx
+[BibcamUrp]: https://github.com/keijiro/BibcamUrp
