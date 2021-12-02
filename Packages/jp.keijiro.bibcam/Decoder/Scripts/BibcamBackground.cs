@@ -3,7 +3,7 @@ using Bibcam.Common;
 
 namespace Bibcam.Decoder {
 
-[RequireComponent(typeof(Camera))]
+[ExecuteInEditMode, RequireComponent(typeof(Camera))]
 public sealed class BibcamBackground : MonoBehaviour
 {
     #region Scene object references
@@ -35,11 +35,8 @@ public sealed class BibcamBackground : MonoBehaviour
 
     #region MonoBehaviour implementation
 
-    void Start()
-      => _material = new Material(_shader);
-
     void OnDestroy()
-      => Destroy(_material);
+      => ObjectUtil.Destroy(_material);
 
     void LateUpdate()
     {
@@ -50,6 +47,9 @@ public sealed class BibcamBackground : MonoBehaviour
         var meta = _decoder.Metadata;
         var ray = BibcamRenderUtils.RayParams(meta);
         var iview = BibcamRenderUtils.InverseView(meta);
+
+        // Lazy initialization for the background shader
+        if (_material == null) _material = ObjectUtil.NewMaterial(_shader);
 
         // Material property update
         _material.SetVector(ShaderID.RayParams, ray);

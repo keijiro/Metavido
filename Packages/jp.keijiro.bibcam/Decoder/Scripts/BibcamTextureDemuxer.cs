@@ -3,6 +3,7 @@ using Bibcam.Common;
 
 namespace Bibcam.Decoder {
 
+[ExecuteInEditMode]
 public sealed class BibcamTextureDemuxer : MonoBehaviour
 {
     #region Hidden asset references
@@ -18,6 +19,9 @@ public sealed class BibcamTextureDemuxer : MonoBehaviour
 
     public void Demux(Texture source, in Metadata meta)
     {
+        // Laze initialization for the demux shader
+        if (_material == null) _material = ObjectUtil.NewMaterial(_shader);
+
         // Lazy initialization for demuxing buffers
         var (w, h) = (source.width, source.height);
         if (_color == null) _color = GfxUtil.RGBARenderTexture(w / 2, h);
@@ -41,14 +45,11 @@ public sealed class BibcamTextureDemuxer : MonoBehaviour
 
     #region MonoBehaviour implementation
 
-    void Start()
-      => _material = new Material(_shader);
-
     void OnDestroy()
     {
-        Destroy(_material);
-        Destroy(_color);
-        Destroy(_depth);
+        ObjectUtil.Destroy(_material);
+        ObjectUtil.Destroy(_color);
+        ObjectUtil.Destroy(_depth);
     }
 
     #endregion

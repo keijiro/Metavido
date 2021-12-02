@@ -3,6 +3,7 @@ using Bibcam.Common;
 
 namespace Bibcam.Decoder {
 
+[ExecuteInEditMode]
 public sealed class BibcamMetadataDecoder : MonoBehaviour
 {
     #region Hidden asset references
@@ -17,6 +18,10 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     public void Decode(Texture source)
     {
+        // Lazy allocation
+        if (_readbackBuffer == null)
+            _readbackBuffer = GfxUtil.StructuredBuffer(12, sizeof(float));
+
         // Decoder kernel dispatching
         _shader.SetTexture(0, "Source", source);
         _shader.SetBuffer(0, "Output", _readbackBuffer);
@@ -37,11 +42,8 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     #region MonoBehaviour implementation
 
-    void Start()
-      => _readbackBuffer = GfxUtil.StructuredBuffer(12, sizeof(float));
-
     void OnDestroy()
-      => _readbackBuffer.Dispose();
+      => _readbackBuffer?.Dispose();
 
     #endregion
 }
