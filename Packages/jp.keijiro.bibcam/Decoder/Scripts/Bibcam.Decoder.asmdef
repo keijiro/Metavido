@@ -2,8 +2,7 @@
     "name": "Bibcam.Decoder",
     "rootNamespace": "",
     "references": [
-        "GUID:b5f587414423d4dc59cf0a18bf95250a",
-        "GUID:63ee2b3a69c095740bf1e4ff4d11f294"
+        "GUID:b5f587414423d4dc59cf0a18bf95250a"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,11 +16,6 @@
             "name": "com.unity.modules.video",
             "expression": "0.0.0",
             "define": "BIBCAM_HAS_UNITY_VIDEO"
-        },
-        {
-            "name": "jp.keijiro.klak.hap",
-            "expression": "0.0.0",
-            "define": "BIBCAM_HAS_KLAK_HAP"
         }
     ],
     "noEngineReferences": false
