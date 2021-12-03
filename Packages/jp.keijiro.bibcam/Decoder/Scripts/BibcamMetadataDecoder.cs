@@ -42,8 +42,13 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     #region MonoBehaviour implementation
 
+    void OnDisable() => OnDestroy();
+
     void OnDestroy()
-      => _readbackBuffer?.Dispose();
+    {
+        _readbackBuffer?.Dispose();
+        _readbackBuffer = null;
+    }
 
     #endregion
 }
