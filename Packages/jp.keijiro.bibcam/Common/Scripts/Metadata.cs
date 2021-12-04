@@ -45,6 +45,9 @@ public readonly struct Metadata
     public Vector2 DepthRange
       => new Vector2(_near, _far);
 
+    public float Hash
+      => _hash;
+
     #endregion
 
     #region Public constructors
