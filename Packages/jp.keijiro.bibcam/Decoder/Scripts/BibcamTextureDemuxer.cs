@@ -6,6 +6,12 @@ namespace Bibcam.Decoder {
 [ExecuteInEditMode]
 public sealed class BibcamTextureDemuxer : MonoBehaviour
 {
+    #region Editable attributes
+
+    [SerializeField, Range(0, 8)] int _margin = 1;
+
+    #endregion
+
     #region Hidden asset references
 
     [SerializeField, HideInInspector] Shader _shader = null;
@@ -28,6 +34,7 @@ public sealed class BibcamTextureDemuxer : MonoBehaviour
         if (_depth == null) _depth = GfxUtil.RHalfRenderTexture(w / 2, h / 2);
 
         // Demux shader invocations
+        _material.SetInteger(ShaderID.Margin, _margin);
         _material.SetVector(ShaderID.DepthRange, meta.DepthRange);
         Graphics.Blit(source, _color, _material, 0);
         Graphics.Blit(source, _depth, _material, 1);

@@ -11,6 +11,7 @@ Shader "Hidden/Bibcam/Demux"
 #include "Packages/jp.keijiro.bibcam/Common/Shaders/Common.hlsl"
 
 Texture2D _MainTex;
+uint _Margin;
 float2 _DepthRange;
 
 void VertexColor(float4 position : POSITION,
@@ -45,11 +46,13 @@ void VertexDepth(float4 position : POSITION,
     outTexCoord.y += BibcamFrameSize.y / 2;
 }
 
-
 float4 FragmentDepth(float4 position : SV_Position,
                      float2 texCoord : TEXCOORD) : SV_Target
 {
-    float3 rgb = _MainTex[texCoord].rgb;
+    uint2 tc = texCoord;
+    tc.x = min(tc.x, BibcamFrameSize.x / 2 - 1 - _Margin);
+    tc.y = max(tc.y, BibcamFrameSize.y / 2 + _Margin);
+    float3 rgb = _MainTex[tc].rgb;
     #ifndef UNITY_NO_LINEAR_COLORSPACE
     rgb = LinearToGammaSpace(rgb);
     #endif

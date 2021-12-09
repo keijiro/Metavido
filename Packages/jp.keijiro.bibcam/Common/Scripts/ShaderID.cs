@@ -14,6 +14,7 @@ public static class ShaderID
     public static readonly int EnvironmentDepth = Shader.PropertyToID("_EnvironmentDepth");
     public static readonly int     HumanStencil = Shader.PropertyToID("_HumanStencil");
     public static readonly int      InverseView = Shader.PropertyToID("_InverseView");
+    public static readonly int           Margin = Shader.PropertyToID("_Margin");
     public static readonly int         Metadata = Shader.PropertyToID("_Metadata");
     public static readonly int        RayParams = Shader.PropertyToID("_RayParams");
     public static readonly int     StencilColor = Shader.PropertyToID("_StencilColor");
