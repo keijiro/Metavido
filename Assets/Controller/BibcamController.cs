@@ -78,7 +78,7 @@ sealed class BibcamController : MonoBehaviour
         (_encoder.minDepth, _encoder.maxDepth) = (minDepth, maxDepth);
 
         // Monitor update
-        _decoder.Decode(_encoder.EncodedTexture);
+        _decoder.DecodeSync(_encoder.EncodedTexture);
         _demuxer.Demux(_encoder.EncodedTexture, _decoder.Metadata);
 
         // UI update

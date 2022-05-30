@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using Bibcam.Common;
 
 namespace Bibcam.Decoder {
@@ -14,29 +15,52 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     #region Public members
 
-    public Metadata Metadata => _readbackArray[0];
+    public Metadata Metadata { get; private set; }
 
-    public void Decode(Texture source)
+    public int DecodeCount { get; private set; }
+
+    public void DecodeSync(Texture source)
     {
-        // Lazy allocation
-        if (_readbackBuffer == null)
-            _readbackBuffer = GfxUtil.StructuredBuffer(12, sizeof(float));
-
-        // Decoder kernel dispatching
-        _shader.SetTexture(0, "Source", source);
-        _shader.SetBuffer(0, "Output", _readbackBuffer);
-        _shader.Dispatch(0, 1, 1, 1);
+        DispatchDecoder(source);
 
         // Synchronized readback (slow!)
-        _readbackBuffer.GetData(_readbackArray);
+        DecodeBuffer.GetData(_readbackArray);
+        Metadata = _readbackArray[0];
+        DecodeCount++;
+    }
+
+    public void RequestDecodeAsync(Texture source)
+    {
+        DispatchDecoder(source);
+
+        // Async readback request
+        AsyncGPUReadback.Request(DecodeBuffer, OnReadback);
     }
 
     #endregion
 
     #region Private members
 
-    GraphicsBuffer _readbackBuffer;
+    GraphicsBuffer _decodeBuffer;
+
+    GraphicsBuffer DecodeBuffer
+      => _decodeBuffer ??
+           (_decodeBuffer = GfxUtil.StructuredBuffer(12, sizeof(float)));
+
+    void DispatchDecoder(Texture source)
+    {
+        _shader.SetTexture(0, "Source", source);
+        _shader.SetBuffer(0, "Output", DecodeBuffer);
+        _shader.Dispatch(0, 1, 1, 1);
+    }
+
     Metadata[] _readbackArray = new Metadata[1];
+
+    void OnReadback(AsyncGPUReadbackRequest req)
+    {
+        if (!req.hasError) Metadata = req.GetData<Metadata>()[0];
+        DecodeCount++;
+    }
 
     #endregion
 
@@ -46,8 +70,8 @@ public sealed class BibcamMetadataDecoder : MonoBehaviour
 
     void OnDestroy()
     {
-        _readbackBuffer?.Dispose();
-        _readbackBuffer = null;
+        _decodeBuffer?.Dispose();
+        _decodeBuffer = null;
     }
 
     #endregion
