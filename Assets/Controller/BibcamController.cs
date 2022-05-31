@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using Bibcam.Decoder;
@@ -81,6 +82,16 @@ sealed class BibcamController : MonoBehaviour
     {
         _feeder?.Dispose();
         _feeder = null;
+    }
+
+    void OnApplicationPause(bool paused)
+    {
+        if (paused && Recorder.IsRecording) Recorder.EndRecording();
+    }
+
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus) SceneManager.LoadScene(0);
     }
 
     void Update()
