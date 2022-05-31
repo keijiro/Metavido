@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
 using Bibcam.Decoder;
 using Bibcam.Encoder;
 using Avfi;
@@ -62,14 +63,15 @@ sealed class BibcamController : MonoBehaviour
 
     void Start()
     {
-        // We have a good phone. Crank it up to 60 fps.
-        Application.targetFrameRate = 60;
-
         // Recorder setup
         Recorder.source = (RenderTexture)_encoder.EncodedTexture;
 
         // Instant decoder setup
         _feeder = new BibcamFrameFeeder(_decoder, _demuxer);
+
+        // FPS cap preference
+        var fpsCap = PlayerPrefs.GetInt("fps_cap_preference") != 0;
+        FindObjectOfType<ARSession>().matchFrameRateRequested = !fpsCap;
 
         // UI setup
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
