@@ -15,24 +15,34 @@ worrying about desynchronization with external tracking data.
 System Requirements
 -------------------
 
-This project uses a LiDAR enabled iOS device as a camera. I'd recommend iPhone
-13 Pro/Pro Max for better quality.
+- Unity 2021 LTS
+- LiDAR-enabled iOS device for recording
 
-You can playback recorded video clips on any Unity-supported platform.
-
-I created this project on Unity 2021.2.
-
-How To Try
+How to Try
 ----------
 
-Build and play the `Encoder` scene on a LiDAR enabled iOS device. You can
-record Bibcam video clips by just pressing the "Record" button. It stores
-recorded clips in the camera roll.
+Build and play the `Encoder` scene on a LiDAR-enabled iOS device. You can
+record Bibcam video clips by pressing the "Record" button. It saves recorded
+clips into the camera roll.
 
-Transfer a video clip to your computer. Copy it into the `StreamingAssets`
-directory, and rename it to `Test.mp4`. Then you can play it back in the
-`Decoder` scene.
+To try playback with the recorded clips, copy them into the project directory
+(the directory that contains `Assets`, `Packages`, etc.) and rename it to
+`Test.mp4`. Then you can play it back with the `Decoder` scene.
 
-For more advanced usage, see the [BibcamVfx] repository.
+Tips
+----
+
+- The encoder application caps the frame rate at 30fps to reduce excessive
+  energy consumption and thermal throttling. You can switch this behavior in
+  the application settings (Settings -> Bibcam -> "Cap Frame Rate").
+
+Related Repositories
+--------------------
+
+- [BibcamVfx] -- Advanced Bibcam VFX with HDRP
+- [BibcamUrp] -- Bibcam renderer on URP
+- [BibcamTimeline] -- Bibcam frame-accurate playback with Timeline
 
 [BibcamVfx]: https://github.com/keijiro/BibcamVfx
+[BibcamUrp]: https://github.com/keijiro/BibcamUrp
+[BibcamTimeline]: https://github.com/keijiro/BibcamTimeline
