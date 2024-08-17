@@ -15,7 +15,7 @@ worrying about desynchronization with external tracking data.
 System Requirements
 -------------------
 
-- Unity 2021 LTS
+- Unity 6
 - LiDAR-enabled iOS device for recording
 
 How to Try

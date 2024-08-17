@@ -72,7 +72,7 @@ sealed class BibcamController : MonoBehaviour
 
         // FPS cap preference
         var fpsCap = PlayerPrefs.GetInt("fps_cap_preference") != 0;
-        FindObjectOfType<ARSession>().matchFrameRateRequested = !fpsCap;
+        FindFirstObjectByType<ARSession>().matchFrameRateRequested = !fpsCap;
 
         // UI setup
         _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);

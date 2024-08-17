@@ -9,9 +9,9 @@
     }
   ],
   "dependencies": {
-    "com.unity.ugui": "1.0.0",
-    "com.unity.xr.arfoundation": "4.2.7",
-    "com.unity.xr.arkit": "4.2.7",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.xr.arfoundation": "6.0.2",
+    "com.unity.xr.arkit": "6.0.2",
     "jp.keijiro.avfi": "1.0.3",
     "com.unity.modules.video": "1.0.0"
   }
