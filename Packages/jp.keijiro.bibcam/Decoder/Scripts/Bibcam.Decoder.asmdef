@@ -2,7 +2,8 @@
     "name": "Bibcam.Decoder",
     "rootNamespace": "",
     "references": [
-        "GUID:b5f587414423d4dc59cf0a18bf95250a"
+        "GUID:b5f587414423d4dc59cf0a18bf95250a",
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -16,6 +17,11 @@
             "name": "com.unity.modules.video",
             "expression": "0.0.0",
             "define": "BIBCAM_HAS_UNITY_VIDEO"
+        },
+        {
+            "name": "com.unity.render-pipelines.core",
+            "expression": "0.0.0",
+            "define": "BIBCAM_HAS_CORE_RP"
         }
     ],
     "noEngineReferences": false

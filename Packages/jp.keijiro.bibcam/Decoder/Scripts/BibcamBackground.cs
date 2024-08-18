@@ -66,10 +66,20 @@ public sealed class BibcamBackground : MonoBehaviour
 
     #region Draw methods
 
+    public bool IsReady => _material != null;
+
     // Public draw method for SRPs
     public void PushDrawCommand(UnityEngine.Rendering.CommandBuffer cmd)
       => cmd.DrawProcedural
            (Matrix4x4.identity, _material, 0, MeshTopology.Triangles, 6);
+
+#if BIBCAM_HAS_CORE_RP
+    // Public draw method for SRPs (Render Graph version)
+    public void PushDrawCommand
+      (UnityEngine.Rendering.RenderGraphModule.RasterGraphContext context)
+      => context.cmd.DrawProcedural
+           (Matrix4x4.identity, _material, 0, MeshTopology.Triangles, 6);
+#endif
 
     // OnRenderObject implementation for the built-in render pipeline
     void OnRenderObject()
