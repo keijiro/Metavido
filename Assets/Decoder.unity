@@ -233,8 +233,8 @@ MonoBehaviour:
   _decoder: {fileID: 1618752109}
   _demux: {fileID: 1618752108}
   _depthOffset: 0
-  _fillColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
-  _depthColor: {r: 1, g: 0.7170844, b: 0, a: 0.23921569}
+  _fillColor: {r: 1, g: 1, b: 1, a: 1}
+  _depthColor: {r: 1, g: 0.8666667, b: 0.6, a: 0.59607846}
   _stencilColor: {r: 0.2980392, g: 1, b: 0.76601315, a: 0.8}
   _shader: {fileID: 4800000, guid: b9eb90f7526a94194b73cae0832d7587, type: 3}
 --- !u!114 &153388036
