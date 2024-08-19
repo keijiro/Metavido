@@ -16,6 +16,7 @@ public sealed class BibcamBackground : MonoBehaviour
     #region Editable attributes
 
     [SerializeField] float _depthOffset = 0;
+    [SerializeField, ColorUsage(false)] Color _fillColor = Color.white;
     [SerializeField] Color _depthColor = Color.white;
     [SerializeField] Color _stencilColor = Color.red;
 
@@ -56,6 +57,7 @@ public sealed class BibcamBackground : MonoBehaviour
         _material.SetMatrix(ShaderID.InverseView, iview);
         _material.SetVector(ShaderID.DepthRange, meta.DepthRange);
         _material.SetFloat(ShaderID.DepthOffset, _depthOffset);
+        _material.SetColor(ShaderID.FillColor, _fillColor);
         _material.SetColor(ShaderID.DepthColor, _depthColor);
         _material.SetColor(ShaderID.StencilColor, _stencilColor);
         _material.SetTexture(ShaderID.ColorTexture, _demux.ColorTexture);

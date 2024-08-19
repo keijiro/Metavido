@@ -12,6 +12,7 @@ public static class ShaderID
     public static readonly int       DepthRange = Shader.PropertyToID("_DepthRange");
     public static readonly int     DepthTexture = Shader.PropertyToID("_DepthTexture");
     public static readonly int EnvironmentDepth = Shader.PropertyToID("_EnvironmentDepth");
+    public static readonly int        FillColor = Shader.PropertyToID("_FillColor");
     public static readonly int     HumanStencil = Shader.PropertyToID("_HumanStencil");
     public static readonly int      InverseView = Shader.PropertyToID("_InverseView");
     public static readonly int           Margin = Shader.PropertyToID("_Margin");

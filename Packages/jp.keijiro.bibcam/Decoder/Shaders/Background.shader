@@ -12,6 +12,7 @@ float4x4 _InverseView;
 float2 _DepthRange;
 float _DepthOffset;
 
+float4 _FillColor;
 float4 _DepthColor;
 float4 _StencilColor;
 
@@ -70,7 +71,7 @@ void Fragment(float4 position : SV_Position,
     s_edge = saturate(1 - 0.2 * abs(s_edge / fwidth(s_edge)));
 
     // Blending
-    float3 rgb = color.rgb;
+    float3 rgb = color.rgb * _FillColor.rgb;
     rgb = lerp(rgb, _DepthColor.rgb, _DepthColor.a * d_ovr);
     rgb = lerp(rgb, _StencilColor.rgb, _StencilColor.a * s_edge);
 
