@@ -1,0 +1,33 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Controller.uss?fileID=7433441132597879392&amp;guid=20017d03c15724469bc4f9946cd7d773&amp;type=3#Controller" />
+    <Bibcam.UI.AspectRatioElement name="aspect-ratio-adjuster" data-source-type="Bibcam.UI.BibcamController, Assembly-CSharp" style="flex-grow: 1;">
+        <engine:VisualElement name="base-container" style="flex-grow: 1; margin-top: 12px; margin-right: 12px; margin-bottom: 12px; margin-left: 12px;">
+            <engine:VisualElement name="tally" style="position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(255, 0, 0); border-right-color: rgb(255, 0, 0); border-top-color: rgb(255, 0, 0); border-bottom-color: rgb(255, 0, 0);" />
+            <engine:VisualElement name="config" style="width: 300px; position: absolute; top: 0; left: 0;">
+                <engine:VisualElement name="label-row" style="flex-direction: row;">
+                    <engine:Label text="Depth Range" />
+                    <engine:VisualElement style="flex-grow: 1;" />
+                    <engine:Label text="0.10" name="min-depth-value">
+                        <Bindings>
+                            <engine:DataBinding property="text" data-source-path="MinDepth" binding-mode="ToTarget" source-to-ui-converters="Float to String (Two Decimal)" />
+                        </Bindings>
+                    </engine:Label>
+                    <engine:Label text=" - " style="white-space: pre;" />
+                    <engine:Label name="max-depth-value" text="5.00">
+                        <Bindings>
+                            <engine:DataBinding property="text" data-source-path="MaxDepth" binding-mode="ToTarget" source-to-ui-converters="Float to String (Two Decimal)" />
+                        </Bindings>
+                    </engine:Label>
+                    <engine:Label text=" m" />
+                </engine:VisualElement>
+                <engine:Slider name="depth-slider" low-value="0.1" value="5">
+                    <Bindings>
+                        <engine:DataBinding property="value" data-source-path="MaxDepth" binding-mode="TwoWay" />
+                    </Bindings>
+                </engine:Slider>
+            </engine:VisualElement>
+            <engine:Button text="Stop" name="stop-button" style="position: absolute; top: 0; right: 0; width: 80px;" />
+            <engine:Button text="Record" name="record-button" style="position: absolute; top: 0; right: 0; width: 80px;" />
+        </engine:VisualElement>
+    </Bibcam.UI.AspectRatioElement>
+</engine:UXML>

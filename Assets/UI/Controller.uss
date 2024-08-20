@@ -1,0 +1,79 @@
+.unity-label {
+    color: rgb(255, 255, 255);
+    font-size: 12px;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    -unity-font-definition: url("project://database/Assets/UI/Quicksand/static/Quicksand-Light.ttf?fileID=12800000&guid=9f75a310a3ef94b59bf62e3e4797cc9c&type=3#Quicksand-Light");
+}
+
+.unity-button {
+    -unity-font-definition: url("project://database/Assets/UI/Quicksand/static/Quicksand-Light.ttf?fileID=12800000&guid=9f75a310a3ef94b59bf62e3e4797cc9c&type=3#Quicksand-Light");
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(43, 43, 43);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.unity-button:active {
+    background-color: rgb(113, 113, 113);
+}
+
+.unity-base-slider--horizontal .unity-base-slider__dragger {
+    width: 18px;
+    height: 18px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    border-bottom-right-radius: 9px;
+    border-bottom-left-radius: 9px;
+    border-left-color: rgb(0, 133, 255);
+    border-right-color: rgb(0, 133, 255);
+    border-top-color: rgb(0, 133, 255);
+    border-bottom-color: rgb(0, 133, 255);
+    border-top-width: 3px;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+    background-color: rgb(0, 0, 0);
+    margin-top: -9px;
+    margin-right: -9px;
+    margin-bottom: -9px;
+    margin-left: -9px;
+}
+
+.unity-base-slider--horizontal .unity-base-slider__tracker {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    height: 6px;
+    border-left-color: rgba(255, 255, 255, 0);
+    border-right-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(255, 255, 255, 0);
+    border-bottom-color: rgba(255, 255, 255, 0);
+    background-color: rgb(43, 43, 43);
+}
+
+.unity-base-slider--horizontal .unity-base-slider__fill {
+    background-color: rgb(0, 133, 255);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.unity-base-slider--horizontal {
+    margin-top: 0;
+}

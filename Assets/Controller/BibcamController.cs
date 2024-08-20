@@ -1,10 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
+using Unity.Properties;
 using Bibcam.Decoder;
 using Bibcam.Encoder;
 using Avfi;
+
+namespace Bibcam.UI {
 
 sealed class BibcamController : MonoBehaviour
 {
@@ -16,46 +19,52 @@ sealed class BibcamController : MonoBehaviour
     [Space]
     [SerializeField] BibcamMetadataDecoder _decoder = null;
     [SerializeField] BibcamTextureDemuxer _demuxer = null;
-    [Space]
-    [SerializeField] Slider _depthSlider = null;
-    [SerializeField] Text _depthLabel = null;
-    [SerializeField] Text _recordLabel = null;
-    [SerializeField] GameObject _recordSign = null;
 
     #endregion
 
     #region Private members
 
     VideoRecorder Recorder => GetComponent<VideoRecorder>();
+    VisualElement UIRoot => GetComponent<UIDocument>().rootVisualElement;
+    VisualElement UITally => UIRoot.Q("tally");
+    Button UIRecordButton => UIRoot.Q<Button>("record-button");
+    Button UIStopButton => UIRoot.Q<Button>("stop-button");
 
     BibcamFrameFeeder _feeder;
 
     #endregion
 
-    #region Public members (exposed for UI)
+    #region UI properties and methods
 
-    public void OnRecordButton()
+    [CreateProperty] public float MinDepth => _encoder.minDepth;
+
+    [CreateProperty] public float MaxDepth
+      { get => _encoder.maxDepth; set => SetMaxDepth(value); }
+
+    void SetMaxDepth(float z)
     {
-        if (Recorder.IsRecording)
-        {
-            // Stop recording
-            Recorder.EndRecording();
-            _recordLabel.text = "Record";
-            _recordLabel.color = Color.white;
-            _recordSign.SetActive(false);
-        }
-        else
-        {
-            // Reset the camera position.
-            _camera.transform.parent.position
-              = -_camera.transform.localPosition;
+        _encoder.maxDepth = z;
+        _encoder.minDepth = z / 50;
+        PlayerPrefs.SetFloat("max_depth", z);
+    }
 
-            // Start recording
-            Recorder.StartRecording();
-            _recordLabel.text = "Stop";
-            _recordLabel.color = Color.red;
-            _recordSign.SetActive(true);
-        }
+    void OnRecordButton()
+    {
+        // Camera position reset
+        _camera.transform.parent.position = -_camera.transform.localPosition;
+
+        Recorder.StartRecording();
+        UIRecordButton.visible = false;
+        UIStopButton.visible = true;
+        UITally.visible = true;
+    }
+
+    void OnStopButton()
+    {
+        Recorder.EndRecording();
+        UIRecordButton.visible = true;
+        UIStopButton.visible = false;
+        UITally.visible = false;
     }
 
     #endregion
@@ -74,8 +83,16 @@ sealed class BibcamController : MonoBehaviour
         var fpsCap = PlayerPrefs.GetInt("fps_cap_preference") != 0;
         FindFirstObjectByType<ARSession>().matchFrameRateRequested = !fpsCap;
 
+        // Max depth value
+        MaxDepth = PlayerPrefs.GetFloat("max_depth", 5);
+
         // UI setup
-        _depthSlider.value = PlayerPrefs.GetFloat("DepthSlider", 5);
+        UIRoot.dataSource = this;
+        UIRecordButton.clicked += OnRecordButton;
+        UIRecordButton.visible = true;
+        UIStopButton.clicked += OnStopButton;
+        UIStopButton.visible = false;
+        UITally.visible = false;
     }
 
     void OnDestroy()
@@ -96,19 +113,12 @@ sealed class BibcamController : MonoBehaviour
 
     void Update()
     {
-        // Depth range settings update
-        var maxDepth = _depthSlider.value;
-        var minDepth = maxDepth / 50;
-        (_encoder.minDepth, _encoder.maxDepth) = (minDepth, maxDepth);
-
         // Monitor update
         _feeder.AddFrame(_encoder.EncodedTexture);
         _feeder.Update();
-
-        // UI update
-        _depthLabel.text = $"Depth Range: {minDepth:0.0}m - {maxDepth:0.0}m";
-        PlayerPrefs.SetFloat("DepthSlider", maxDepth);
     }
 
     #endregion
 }
+
+} // namespace Bibcam.UI
