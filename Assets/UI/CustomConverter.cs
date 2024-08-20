@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Bibcam.UI {
+namespace Metavido.UI {
 
 public static class CustomConverter
 {
@@ -18,4 +18,4 @@ public static class CustomConverter
     }
 }
 
-} // namespace Bibcam.UI
+} // namespace Metavido.UI

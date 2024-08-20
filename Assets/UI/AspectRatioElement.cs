@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Bibcam.UI {
+namespace Metavido.UI {
 
 [UxmlElement]
 public partial class AspectRatioElement : VisualElement
@@ -58,4 +58,4 @@ public partial class AspectRatioElement : VisualElement
     }
 }
 
-} // namespace Bibcam.UI
+} // namespace Metavido.UI

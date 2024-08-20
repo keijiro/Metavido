@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Keijiro
-  productName: Bibcam
+  productName: Metavido
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -162,8 +162,8 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Standalone: jp.keijiro.bibcam
-    iPhone: jp.keijiro.bibcam
+    Standalone: jp.keijiro.metavido
+    iPhone: jp.keijiro.metavido
   buildNumber:
     Standalone: 0
     VisionOS: 0

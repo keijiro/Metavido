@@ -1,0 +1,12 @@
+{
+    "author": "Keijiro Takahashi",
+    "dependencies": { },
+    "description": "Metadata Multiplexing Video Format",
+    "displayName": "Metavido",
+    "keywords": [ "unity" ],
+    "license": "Unlicense",
+    "name": "jp.keijiro.metavido",
+    "unity": "6000.0",
+    "unityRelease": "0f1",
+    "version": "4.0.0"
+}

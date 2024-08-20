@@ -216,8 +216,8 @@
       "dependencies": {},
       "url": "https://registry.npmjs.com"
     },
-    "jp.keijiro.bibcam": {
-      "version": "file:jp.keijiro.bibcam",
+    "jp.keijiro.metavido": {
+      "version": "file:jp.keijiro.metavido",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
