@@ -5,21 +5,22 @@ using UnityEngine.Video;
 
 namespace Metavido.Decoder {
 
-sealed class MetavidoVideoFeeder : MonoBehaviour
+[AddComponentMenu("Metavido/Decoding/Metavido Video Feeder")]
+public sealed class VideoFeeder : MonoBehaviour
 {
 #if METAVIDO_HAS_UNITY_VIDEO
 
     #region Scene object reference
 
-    [SerializeField] MetavidoMetadataDecoder _decoder = null;
-    [SerializeField] MetavidoTextureDemuxer _demuxer = null;
+    [SerializeField] MetadataDecoder _decoder = null;
+    [SerializeField] TextureDemuxer _demuxer = null;
     [SerializeField] bool _asynchronous = true;
 
     #endregion
 
     #region MonoBehaviour implementation
 
-    MetavidoFrameFeeder _feeder;
+    FrameFeeder _feeder;
 
     void OnDestroy()
     {
@@ -35,7 +36,7 @@ sealed class MetavidoVideoFeeder : MonoBehaviour
         if (_asynchronous)
         {
             // Async mode: Use FrameFeeder.
-            _feeder = _feeder ?? new MetavidoFrameFeeder(_decoder, _demuxer);
+            _feeder = _feeder ?? new FrameFeeder(_decoder, _demuxer);
             _feeder.AddFrame(player.texture);
             _feeder.Update();
         }

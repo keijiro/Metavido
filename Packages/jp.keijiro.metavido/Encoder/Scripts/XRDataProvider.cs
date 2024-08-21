@@ -7,7 +7,8 @@ using UnityEngine.XR.ARFoundation;
 
 namespace Metavido.Encoder {
 
-public sealed class MetavidoXRDataProvider : MonoBehaviour
+[AddComponentMenu("Metavido/Encoding/Metavido XR Data Provider")]
+public sealed class XRDataProvider : MonoBehaviour
 {
 #if METAVIDO_HAS_ARFOUNDATION
 

@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - _shader: {fileID: 7200000, guid: 7b1c01e18b47b4303b8abb8469ee69d3, type: 3}
   executionOrder: 0
-  icon: {instanceID: 0}
+  icon: {fileID: 2800000, guid: fc20f2977db4c49a288952492adcfed9, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

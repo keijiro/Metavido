@@ -3,7 +3,7 @@ using Metavido.Common;
 
 namespace Metavido.Decoder {
 
-public static class MetavidoRenderUtils
+public static class RenderUtils
 {
     #region UV to ray conversion parameters
 

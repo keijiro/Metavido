@@ -2,13 +2,13 @@
 #define __INCLUDE_METAVIDO_DECODER_UTILS_HLSL__
 
 // Linear distance to Z depth
-float DistanceToDepth(float d)
+float mtvd_DistanceToDepth(float d)
 {
     return (1 / d - _ZBufferParams.w) / _ZBufferParams.z;
 }
 
 // Inversion projection into the world space
-float3 DistanceToWorldPosition
+float3 mtvd_DistanceToWorldPosition
   (float2 uv, float d, in float4 rayParams, in float4x4 inverseView)
 {
     float3 ray = float3((uv - 0.5) * 2, 1);

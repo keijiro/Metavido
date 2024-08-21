@@ -4,12 +4,13 @@ using Metavido.Common;
 namespace Metavido.Decoder {
 
 [ExecuteInEditMode, RequireComponent(typeof(Camera))]
-public sealed class MetavidoBackground : MonoBehaviour
+[AddComponentMenu("Metavido/Decoding/Metavido Video Background")]
+public sealed class VideoBackground : MonoBehaviour
 {
     #region Scene object references
 
-    [SerializeField] MetavidoMetadataDecoder _decoder = null;
-    [SerializeField] MetavidoTextureDemuxer _demux = null;
+    [SerializeField] MetadataDecoder _decoder = null;
+    [SerializeField] TextureDemuxer _demux = null;
 
     #endregion
 
@@ -46,8 +47,8 @@ public sealed class MetavidoBackground : MonoBehaviour
 
         // Camera parameters
         var meta = _decoder.Metadata;
-        var ray = MetavidoRenderUtils.RayParams(meta);
-        var iview = MetavidoRenderUtils.InverseView(meta);
+        var ray = RenderUtils.RayParams(meta);
+        var iview = RenderUtils.InverseView(meta);
 
         // Lazy initialization for the background shader
         if (_material == null) _material = ObjectUtil.NewMaterial(_shader);

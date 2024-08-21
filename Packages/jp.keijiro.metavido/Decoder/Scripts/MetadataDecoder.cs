@@ -5,7 +5,8 @@ using Metavido.Common;
 namespace Metavido.Decoder {
 
 [ExecuteInEditMode]
-public sealed class MetavidoMetadataDecoder : MonoBehaviour
+[AddComponentMenu("Metavido/Decoding/Metavido Metadata Decoder")]
+public sealed class MetadataDecoder : MonoBehaviour
 {
     #region Hidden asset references
 

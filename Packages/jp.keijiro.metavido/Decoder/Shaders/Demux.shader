@@ -20,8 +20,8 @@ void VertexColor(float4 position : POSITION,
                  out float4 outTexCoord : TEXCOORD)
 {
     outPosition = UnityObjectToClipPos(position);
-    outTexCoord = texCoord.xyxy * MetavidoFrameSize.xyxy / float4(2, 1, 2, 2);
-    outTexCoord.x += MetavidoFrameSize.x / 2;
+    outTexCoord = texCoord.xyxy * mtvd_FrameSize.xyxy / float4(2, 1, 2, 2);
+    outTexCoord.x += mtvd_FrameSize.x / 2;
 }
 
 float4 FragmentColor(float4 position : SV_Position,
@@ -42,21 +42,21 @@ void VertexDepth(float4 position : POSITION,
                  out float2 outTexCoord : TEXCOORD)
 {
     outPosition = float4(position.x * 2 - 1, 1 - position.y * 2, 1, 1);
-    outTexCoord = texCoord * MetavidoFrameSize / 2;
-    outTexCoord.y += MetavidoFrameSize.y / 2;
+    outTexCoord = texCoord * mtvd_FrameSize / 2;
+    outTexCoord.y += mtvd_FrameSize.y / 2;
 }
 
 float4 FragmentDepth(float4 position : SV_Position,
                      float2 texCoord : TEXCOORD) : SV_Target
 {
     uint2 tc = texCoord;
-    tc.x = min(tc.x, MetavidoFrameSize.x / 2 - 1 - _Margin);
-    tc.y = max(tc.y, MetavidoFrameSize.y / 2 + _Margin);
+    tc.x = min(tc.x, mtvd_FrameSize.x / 2 - 1 - _Margin);
+    tc.y = max(tc.y, mtvd_FrameSize.y / 2 + _Margin);
     float3 rgb = _MainTex[tc].rgb;
     #ifndef UNITY_NO_LINEAR_COLORSPACE
     rgb = LinearToGammaSpace(rgb);
     #endif
-    return DecodeDepth(rgb, _DepthRange);
+    return mtvd_DecodeDepth(rgb, _DepthRange);
 }
 
     ENDCG

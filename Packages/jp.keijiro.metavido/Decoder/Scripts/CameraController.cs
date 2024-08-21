@@ -4,11 +4,12 @@ using Metavido.Common;
 namespace Metavido.Decoder {
 
 [RequireComponent(typeof(Camera))]
-public sealed class MetavidoCameraController : MonoBehaviour
+[AddComponentMenu("Metavido/Decoding/Metavido Camera Controller")]
+public sealed class CameraController : MonoBehaviour
 {
     #region Scene object references
 
-    [SerializeField] MetavidoMetadataDecoder _decoder = null;
+    [SerializeField] MetadataDecoder _decoder = null;
     [SerializeField] bool _interpolation = false;
 
     #endregion

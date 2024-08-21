@@ -4,7 +4,8 @@ using Metavido.Common;
 namespace Metavido.Decoder {
 
 [ExecuteInEditMode]
-public sealed class MetavidoTextureDemuxer : MonoBehaviour
+[AddComponentMenu("Metavido/Decoding/Metavido Texture Demuxer")]
+public sealed class TextureDemuxer : MonoBehaviour
 {
     #region Editable attributes
 

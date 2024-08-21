@@ -12,7 +12,7 @@ MonoImporter:
   - _recordLabel: {instanceID: 0}
   - _monitorShader: {fileID: 4800000, guid: 019687af59a744b6d80040aaf41b735f, type: 3}
   executionOrder: 0
-  icon: {instanceID: 0}
+  icon: {fileID: 2800000, guid: fc20f2977db4c49a288952492adcfed9, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

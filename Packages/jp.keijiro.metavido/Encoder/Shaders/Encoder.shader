@@ -28,7 +28,7 @@ StructuredBuffer<float> _Metadata;
 
 bool EncodeMetadata(float2 uv)
 {
-    uint2 tc = uv * MetavidoFrameSize + 0.5 / MetavidoFrameSize;
+    uint2 tc = uv * mtvd_FrameSize + 0.5 / mtvd_FrameSize;
     tc /= 8;
     bool bit = (asint(_Metadata[min(tc.x, 12)]) >> tc.y) & 1;
     return bit && (tc.x < 12) && (tc.y < 32);
@@ -59,20 +59,20 @@ float4 Fragment(float4 position : SV_Position,
     float m = EncodeMetadata(texCoord);
 
     // Color
-    float2 uv_c = UVFix(UV_FullToColor(texCoord));
+    float2 uv_c = UVFix(mtvd_UV_FullToColor(texCoord));
     float y = tex2D(_textureY, uv_c).x;
     float2 cbcr = tex2D(_textureCbCr, uv_c).xy;
-    float3 c = YCbCrToSRGB(y, cbcr);
+    float3 c = mtvd_YCbCrToSRGB(y, cbcr);
 
     // Hue-encoded depth
-    float depth = tex2D(_EnvironmentDepth, UVFix(UV_FullToDepth(texCoord))).x;
-    float3 z = EncodeDepth(depth, _DepthRange);
+    float depth = tex2D(_EnvironmentDepth, UVFix(mtvd_UV_FullToDepth(texCoord))).x;
+    float3 z = mtvd_EncodeDepth(depth, _DepthRange);
 
     // Human stencil
-    float s = tex2D(_HumanStencil, UVFix(UV_FullToStencil(texCoord))).x;
+    float s = tex2D(_HumanStencil, UVFix(mtvd_UV_FullToStencil(texCoord))).x;
 
     // Multiplexing
-    float3 rgb = MetavidoMux(texCoord, m, c, z, s);
+    float3 rgb = mtvd_Mux(texCoord, m, c, z, s);
 
     // Linear color support
     #ifndef UNITY_NO_LINEAR_COLORSPACE

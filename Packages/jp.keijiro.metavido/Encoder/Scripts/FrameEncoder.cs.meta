@@ -10,7 +10,7 @@ MonoImporter:
   - _mainView: {instanceID: 0}
   - _shader: {fileID: 4800000, guid: 948b9b391aa114ce1be11a827d6a6d13, type: 3}
   executionOrder: 0
-  icon: {instanceID: 0}
+  icon: {fileID: 2800000, guid: fc20f2977db4c49a288952492adcfed9, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

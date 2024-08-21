@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace Metavido.Decoder {
 
-public sealed class MetavidoFrameFeeder : IDisposable
+[AddComponentMenu("Metavido/Decoding/Metavido Frame Feeder")]
+public sealed class FrameFeeder : IDisposable
 {
     #region Private members
 
-    (MetavidoMetadataDecoder decoder, MetavidoTextureDemuxer demuxer) _target;
+    (MetadataDecoder decoder, TextureDemuxer demuxer) _target;
 
     Queue<(RenderTexture rt, int index)> _queue
       = new Queue<(RenderTexture rt, int index)>();
@@ -19,8 +20,7 @@ public sealed class MetavidoFrameFeeder : IDisposable
 
     #region Public methods
 
-    public MetavidoFrameFeeder
-      (MetavidoMetadataDecoder decoder, MetavidoTextureDemuxer demuxer)
+    public FrameFeeder(MetadataDecoder decoder, TextureDemuxer demuxer)
       => _target = (decoder, demuxer);
 
     public void Dispose()

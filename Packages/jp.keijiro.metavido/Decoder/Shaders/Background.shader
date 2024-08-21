@@ -44,7 +44,7 @@ void Fragment(float4 position : SV_Position,
     float depth = tex2D(_DepthTexture, texCoord).x;
 
     // World space position
-    float3 wpos = DistanceToWorldPosition
+    float3 wpos = mtvd_DistanceToWorldPosition
       (texCoord, depth, _RayParams, _InverseView);
 
     // Depth range mask
@@ -77,7 +77,7 @@ void Fragment(float4 position : SV_Position,
 
     // Output
     outColor = float4(rgb, 1);
-    outDepth = DistanceToDepth(depth + _DepthOffset);
+    outDepth = mtvd_DistanceToDepth(depth + _DepthOffset);
 }
 
     ENDCG

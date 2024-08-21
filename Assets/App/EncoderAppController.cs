@@ -9,16 +9,16 @@ using Avfi;
 
 namespace Metavido.UI {
 
-sealed class MetavidoController : MonoBehaviour
+sealed class EncoderAppController : MonoBehaviour
 {
     #region Scene object references
 
     [Space]
-    [SerializeField] MetavidoEncoder _encoder = null;
+    [SerializeField] FrameEncoder _encoder = null;
     [SerializeField] Camera _camera = null;
     [Space]
-    [SerializeField] MetavidoMetadataDecoder _decoder = null;
-    [SerializeField] MetavidoTextureDemuxer _demuxer = null;
+    [SerializeField] MetadataDecoder _decoder = null;
+    [SerializeField] TextureDemuxer _demuxer = null;
 
     #endregion
 
@@ -30,7 +30,7 @@ sealed class MetavidoController : MonoBehaviour
     Button UIRecordButton => UIRoot.Q<Button>("record-button");
     Button UIStopButton => UIRoot.Q<Button>("stop-button");
 
-    MetavidoFrameFeeder _feeder;
+    FrameFeeder _feeder;
 
     #endregion
 
@@ -77,7 +77,7 @@ sealed class MetavidoController : MonoBehaviour
         Recorder.source = (RenderTexture)_encoder.EncodedTexture;
 
         // Instant decoder setup
-        _feeder = new MetavidoFrameFeeder(_decoder, _demuxer);
+        _feeder = new FrameFeeder(_decoder, _demuxer);
 
         // FPS cap preference
         var fpsCap = PlayerPrefs.GetInt("fps_cap_preference") != 0;

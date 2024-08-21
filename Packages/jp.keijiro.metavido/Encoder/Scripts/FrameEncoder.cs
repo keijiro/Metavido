@@ -3,7 +3,8 @@ using Metavido.Common;
 
 namespace Metavido.Encoder {
 
-public sealed class MetavidoEncoder : MonoBehaviour
+[AddComponentMenu("Metavido/Encoding/Metavido Frame Encoder")]
+public sealed class FrameEncoder : MonoBehaviour
 {
     #region Public accessors
 
@@ -15,7 +16,7 @@ public sealed class MetavidoEncoder : MonoBehaviour
 
     #region Editable attributes
 
-    [SerializeField] MetavidoXRDataProvider _xrSource = null;
+    [SerializeField] XRDataProvider _xrSource = null;
     [SerializeField] float _minDepth = 0.025f;
     [SerializeField] float _maxDepth = 5;
 

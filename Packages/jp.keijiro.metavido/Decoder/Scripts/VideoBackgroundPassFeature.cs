@@ -6,9 +6,9 @@ using UnityEngine.Rendering.Universal;
 
 namespace Metavido.Decoder {
 
-sealed class MetavidoBackgroundRenderPass : ScriptableRenderPass
+sealed class VideoBackgroundRenderPass : ScriptableRenderPass
 {
-    class PassData { public MetavidoBackground Driver { get; set; } }
+    class PassData { public VideoBackground Driver { get; set; } }
 
     public override void RecordRenderGraph(RenderGraph graph,
                                            ContextContainer context)
@@ -16,9 +16,9 @@ sealed class MetavidoBackgroundRenderPass : ScriptableRenderPass
         // Play mode not supported
         if (!UnityEngine.Application.isPlaying) return;
 
-        // MetavidoBackground component reference
+        // VideoBackground component reference
         var camera = context.Get<UniversalCameraData>().camera;
-        var driver = camera.GetComponent<MetavidoBackground>();
+        var driver = camera.GetComponent<VideoBackground>();
         if (driver == null || !driver.enabled || !driver.IsReady) return;
 
         // Render pass building
@@ -40,12 +40,12 @@ sealed class MetavidoBackgroundRenderPass : ScriptableRenderPass
     }
 }
 
-public sealed class MetavidoBackgroundPassFeature : ScriptableRendererFeature
+public sealed class VideoBackgroundPassFeature : ScriptableRendererFeature
 {
-    MetavidoBackgroundRenderPass _pass;
+    VideoBackgroundRenderPass _pass;
 
     public override void Create()
-      => _pass = new MetavidoBackgroundRenderPass
+      => _pass = new VideoBackgroundRenderPass
            { renderPassEvent = RenderPassEvent.AfterRenderingOpaques };
 
     public override void AddRenderPasses(ScriptableRenderer renderer,
