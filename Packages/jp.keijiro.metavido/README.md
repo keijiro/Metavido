@@ -4,10 +4,10 @@ Metavido - Metadata Embedding Video Subformat
 ![gif](https://user-images.githubusercontent.com/343936/142789278-4ede7318-e789-4d32-ad99-06ff90e91b20.gif)
 ![gif](https://user-images.githubusercontent.com/343936/142789286-f7ba3b96-c176-4687-aa58-170f2e166855.gif)
 
-**Metavido** is a video subformat that embeds camera metadata directly into
-video frames using a burnt-in-barcode technique. It also integrates non-color
-planes, such as depth information and human stencil, into the frame through a
-squeezing method.
+**Metavido** (formerly known as *Bibcam*) is a video subformat that embeds
+camera metadata directly into video frames using a burnt-in-barcode technique.
+It also integrates non-color planes, such as depth information and human
+stencil, into the frame through a squeezing method.
 
 ![Planes](https://user-images.githubusercontent.com/343936/142789292-9bba9330-0fa0-49f8-b270-9bcefe326278.png)
 
