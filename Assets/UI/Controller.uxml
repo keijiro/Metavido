@@ -20,7 +20,7 @@
                     </engine:Label>
                     <engine:Label text=" m" />
                 </engine:VisualElement>
-                <engine:Slider name="depth-slider" low-value="0.1" value="5">
+                <engine:Slider name="depth-slider" low-value="0.1" value="5" fill="true">
                     <Bindings>
                         <engine:DataBinding property="value" data-source-path="MaxDepth" binding-mode="TwoWay" />
                     </Bindings>
