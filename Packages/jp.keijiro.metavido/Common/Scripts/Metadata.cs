@@ -28,7 +28,7 @@ public readonly struct Metadata
     #region Public accessors
 
     public bool IsValid
-      => _fov != 0;
+      => !float.IsNaN(_fov) && _fov > 0 && _fov < 180;
 
     public Vector3 CameraPosition
       => new Vector3(_px, _py, _pz);
