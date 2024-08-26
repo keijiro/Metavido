@@ -1,6 +1,6 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/Controller.uss?fileID=7433441132597879392&amp;guid=20017d03c15724469bc4f9946cd7d773&amp;type=3#Controller" />
-    <Metavido.UI.AspectRatioElement name="aspect-ratio-adjuster" data-source-type="Metavido.UI.EncoderAppController, Assembly-CSharp" style="flex-grow: 1;">
+    <Style src="project://database/Assets/UI/Encoder.uss?fileID=7433441132597879392&amp;guid=20017d03c15724469bc4f9946cd7d773&amp;type=3#Encoder" />
+    <Metavido.UI.AspectRatioElement name="aspect-ratio-adjuster" data-source-type="Metavido.Encoder.AppController, EncoderApp" style="flex-grow: 1;">
         <engine:VisualElement name="base-container" style="flex-grow: 1; margin-top: 12px; margin-right: 12px; margin-bottom: 12px; margin-left: 12px;">
             <engine:VisualElement name="tally" style="position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-left-color: rgb(255, 0, 0); border-right-color: rgb(255, 0, 0); border-top-color: rgb(255, 0, 0); border-bottom-color: rgb(255, 0, 0);" />
             <engine:VisualElement name="config" style="width: 300px; position: absolute; top: 0; left: 0;">

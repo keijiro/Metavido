@@ -7,9 +7,9 @@ using Metavido.Decoder;
 using Metavido.Encoder;
 using Avfi;
 
-namespace Metavido.UI {
+namespace Metavido.Encoder {
 
-sealed class EncoderAppController : MonoBehaviour
+sealed class AppController : MonoBehaviour
 {
     #region Scene object references
 
@@ -121,4 +121,4 @@ sealed class EncoderAppController : MonoBehaviour
     #endregion
 }
 
-} // namespace Metavido.UI
+} // namespace Metavido.Encoder
