@@ -355,6 +355,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1618752107}
+  - component: {fileID: 1618752111}
   - component: {fileID: 1618752106}
   - component: {fileID: 1618752110}
   - component: {fileID: 1618752109}
@@ -392,7 +393,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: file://Test.mp4
+  m_Url: https://huggingface.co/keijiro-tk/metavido-data/resolve/main/TaiwanStreet1-H264.mp4
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
@@ -459,6 +460,18 @@ MonoBehaviour:
   _decoder: {fileID: 1618752109}
   _demuxer: {fileID: 1618752108}
   _asynchronous: 1
+--- !u!114 &1618752111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618752105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84b000b9959e44bf9630052640b7908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
