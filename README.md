@@ -28,9 +28,9 @@ LiDAR-enabled iOS device. Once the application is running, press the â€œRecordâ€
 button to capture Metavido clips, which will be automatically saved to your
 camera roll.
 
-To play back the recorded clips, copy the clips into your project directory
-(the directory that contains `Assets`, `Packages`, etc.), and rename the file
-to `Test.mp4`. You can then use the `Decoder` scene to play back the clip.
+To play back the recorded clip, use the `Decoder` scene. In the `Source` game
+object, update the source property of the Video Player component to point to
+your recorded clip.
 
 Tips
 ----
