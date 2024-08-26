@@ -1,0 +1,24 @@
+{
+    "name": "EncoderApp",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a9420e37d7990b54abdef6688edbe313",
+        "GUID:27ef066f8b226461ba23d8dc3671bb38",
+        "GUID:b5f587414423d4dc59cf0a18bf95250a",
+        "GUID:1d13b6103cd1e4c66a76babde2f48804",
+        "GUID:37f9fed9b036d40a09b7fe4fb262212a"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "iOS",
+        "macOSStandalone"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
