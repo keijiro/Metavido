@@ -11,7 +11,7 @@ sealed class MetadataDisplay : MonoBehaviour
     string GetMetadataString()
     {
         var data = _decoder.Metadata;
-        if (!data.IsValid) return "(Invalid)";
+        if (!data.IsValid) return "Loading...";
         return $"Position: {data.CameraPosition}\n" +
                $"Rotation: {data.CameraRotation.eulerAngles}\n" +
                $"Center:   {data.CenterShift}\n" +
