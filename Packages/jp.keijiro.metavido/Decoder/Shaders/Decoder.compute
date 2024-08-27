@@ -9,12 +9,13 @@ RWStructuredBuffer<float> Output;
 void Decoder(uint id : SV_DispatchThreadID)
 {
     uint acc = 0;
-    uint x = id * 8 + 4;
+    uint x1 = id * 8 + 3;
+    uint x2 = id * 8 + 5;
 
     for (uint i = 0; i < 32; i++)
     {
         uint y = i * 8 + 4;
-        bool bit = Source[uint2(x, y)].b > 0.5;
+        bool bit = (Source[uint2(x1, y)].b + Source[uint2(x2, y)].b) > 0.2;
         acc |= bit << i;
     }
 
