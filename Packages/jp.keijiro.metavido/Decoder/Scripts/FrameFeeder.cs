@@ -31,8 +31,13 @@ public sealed class FrameFeeder : IDisposable
 
     public void AddFrame(Texture source)
     {
+        // sRGB/Linear switch based on the source texture format
+        var rw = source.isDataSRGB ? RenderTextureReadWrite.sRGB :
+                                     RenderTextureReadWrite.Linear;
+
         // Source texture copy into a temporary RT
-        var tempRT = RenderTexture.GetTemporary(source.width, source.height);
+        var tempRT = RenderTexture.GetTemporary
+          (source.width, source.height, 0, RenderTextureFormat.Default, rw);
         Graphics.CopyTexture(source, tempRT);
 
         // Decode queuing
