@@ -13,9 +13,6 @@ sealed class VideoBackgroundRenderPass : ScriptableRenderPass
     public override void RecordRenderGraph(RenderGraph graph,
                                            ContextContainer context)
     {
-        // Play mode not supported
-        if (!UnityEngine.Application.isPlaying) return;
-
         // VideoBackground component reference
         var camera = context.Get<UniversalCameraData>().camera;
         var driver = camera.GetComponent<VideoBackground>();
