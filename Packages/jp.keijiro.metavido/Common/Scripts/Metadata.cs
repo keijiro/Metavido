@@ -108,7 +108,10 @@ public readonly struct Metadata
     #region Private helpers
 
     float RW
-      => Mathf.Sqrt(1 - _rx * _rx - _ry * _ry - _rz * _rz);
+      => SafeSqrt(1 - _rx * _rx - _ry * _ry - _rz * _rz);
+
+    float SafeSqrt(float x)
+      => x > Mathf.Epsilon ? Mathf.Sqrt(x) : 0;
 
     #endregion
 }
